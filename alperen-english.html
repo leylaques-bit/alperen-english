@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Alperen's English</title>
+<style>
+  :root{
+    --ink:#1c2430; --paper:#f6f1e7; --card:#ffffff;
+    --sun:#e8973a; --sky:#3a7ca5; --leaf:#5b8c5a; --wrong:#c15b4a;
+    --gold:#d9a441; --rose:#c9788f; --shadow:rgba(28,36,48,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{height:100%;background:var(--card)}
+  body{
+    font-family:"Georgia",serif; background:var(--paper); color:var(--ink);
+    display:flex; flex-direction:column; overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    position:fixed; inset:0;
+  }
+  .sans{font-family:"Helvetica Neue",Arial,sans-serif}
+  header{
+    padding:calc(env(safe-area-inset-top) + 14px) 20px 8px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+  }
+  .brand{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;letter-spacing:.13em;
+    text-transform:uppercase;font-size:13px;color:var(--sky)}
+  .streak{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;font-weight:600;color:var(--sun)}
+  main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 20px;min-height:0}
+  .wrap{max-width:460px;margin:0 auto;width:100%}
+
+  h1{font-size:28px;line-height:1.12;margin-bottom:8px}
+  h2{font-size:21px;margin:4px 0 12px}
+  .muted{font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;color:#7d7669;line-height:1.5}
+
+  .love{background:linear-gradient(150deg,#fff2f5,#ffe9ef);border:1.5px solid #f4d3dd;border-radius:18px;
+    padding:15px 18px;margin-bottom:16px;font-family:"Helvetica Neue",Arial,sans-serif}
+  .love .from{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);font-weight:700;margin-bottom:6px}
+  .love .msg{font-size:15px;line-height:1.5;color:#5a4750;font-style:italic}
+
+  .tile{background:var(--card);border:none;border-radius:20px;box-shadow:0 10px 26px var(--shadow);
+    padding:20px;margin-bottom:14px;width:100%;text-align:left;cursor:pointer;display:block}
+  .tile:active{transform:scale(.99)}
+  .tile .em{font-size:26px;display:block;margin-bottom:8px}
+  .tile .t{font-family:"Helvetica Neue",Arial,sans-serif;font-size:18px;font-weight:700}
+  .tile .s{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:#98928a;margin-top:3px;line-height:1.45}
+  .tile-row{display:flex;align-items:center;gap:14px}
+  .tile-row .em{margin:0}
+  .tile-row .grow{flex:1}
+  .badge-pill{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:700;
+    padding:4px 10px;border-radius:100px;background:#eef3ee;color:var(--leaf);white-space:nowrap}
+  .badge-pill.todo{background:#f0e9db;color:#98928a}
+
+  .btn{width:100%;border:none;border-radius:100px;padding:16px;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:12px}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{background:var(--sky);color:#fff}
+  .btn-leaf{background:var(--leaf);color:#fff}
+  .btn-sun{background:var(--sun);color:#fff}
+  .btn-rose{background:var(--rose);color:#fff}
+  .btn-ghost{background:#e9e1d1;color:var(--ink)}
+  .btn-sm{padding:12px;font-size:14px}
+
+  .progress{height:6px;background:#e4ddcf;border-radius:3px;overflow:hidden;margin:6px 0 18px}
+  .progress-bar{height:100%;width:0%;background:var(--sun);border-radius:3px;transition:width .35s ease}
+
+  .qcard{background:var(--card);border-radius:24px;box-shadow:0 14px 34px var(--shadow);padding:24px 20px}
+  .qlabel{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;letter-spacing:.15em;
+    text-transform:uppercase;color:#98928a;font-weight:600;text-align:center}
+  .qpic{font-size:70px;text-align:center;margin:8px 0 4px;min-height:78px;display:flex;align-items:center;justify-content:center;user-select:none}
+  .qword{font-size:28px;font-weight:700;text-align:center;line-height:1.2}
+  .qword.small{font-size:21px;font-weight:600;line-height:1.45}
+  .qword .blank{color:var(--sun);border-bottom:3px solid var(--sun);padding:0 20px}
+  .say{margin:12px auto 0;background:none;border:1.5px solid #e0d8c8;border-radius:100px;padding:9px 20px;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px}
+  .say:active{background:#f6f1e7}
+  .say.big{font-size:17px;padding:14px 26px;margin-top:4px}
+  .opts{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+  .opt{width:100%;background:#faf6ee;border:1.5px solid #ece4d4;border-radius:16px;padding:15px;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:17px;font-weight:600;color:var(--ink);cursor:pointer;
+    transition:background .15s,border-color .15s;text-align:center}
+  .opt:active{background:#f1eadc}
+  .opt.correct{background:#e7f0e2;border-color:var(--leaf);color:var(--leaf)}
+  .opt.wrong{background:#f6e3df;border-color:var(--wrong);color:var(--wrong)}
+  .opt.dim{opacity:.45}
+  .opt:disabled{cursor:default}
+  .explain{font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.5;
+    background:#f3ede0;border-radius:14px;padding:14px;margin-top:16px;color:#5a5346;display:none}
+  .explain.show{display:block}
+  .explain b{color:var(--ink)}
+
+  /* sentence build chips */
+  .build-area{min-height:60px;background:#f3ede0;border-radius:14px;padding:12px;margin-top:16px;
+    display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+  .build-area:empty::before{content:"Kelimelere dokun ↓";color:#b7ae9f;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px}
+  .bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-family:"Helvetica Neue",Arial,sans-serif;font-size:16px;font-weight:600;padding:10px 14px;
+    border-radius:12px;border:1.5px solid #e0d8c8;background:#fffdf9;cursor:pointer}
+  .chip:active{transform:scale(.95)}
+  .chip.used{opacity:.3;pointer-events:none}
+  .chip.inbuild{background:#eef3fa;border-color:#bcd4e6}
+
+  .spell-in{width:100%;font-family:"Helvetica Neue",Arial,sans-serif;font-size:22px;font-weight:700;
+    text-align:center;padding:14px;border:2px solid #e0d8c8;border-radius:16px;background:#fffdf9;color:var(--ink);
+    letter-spacing:.06em;margin-top:18px}
+  .spell-in:focus{outline:none;border-color:var(--sky)}
+  .hint-letters{font-family:"Helvetica Neue",Arial,sans-serif;letter-spacing:.32em;font-size:20px;color:#b7ae9f;text-align:center;margin-top:12px}
+
+  .teach{background:var(--card);border-radius:24px;box-shadow:0 14px 34px var(--shadow);padding:24px 22px;margin-bottom:16px}
+  .teach h3{font-size:20px;margin-bottom:10px;color:var(--sky)}
+  .teach p{font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.6;margin-bottom:12px;color:#3a3630}
+  .teach .rule{background:#eef3fa;border-left:4px solid var(--sky);border-radius:8px;padding:12px 14px;margin-bottom:12px;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.55;color:#2a3a46}
+  .teach .ex{background:#f3ede0;border-radius:12px;padding:11px 14px;margin-bottom:9px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px}
+  .teach .ex .en{font-weight:700}
+  .teach .ex .tr{color:#7d7669;font-size:13px;margin-top:2px}
+  .teach .tip{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:#9a7a3a;background:#fbf3e2;border-radius:10px;padding:10px 12px;margin-top:6px}
+
+  .result{text-align:center;padding-top:20px}
+  .result .big{font-size:60px;margin-bottom:6px}
+  .result h2{font-size:28px}
+  .result .lvl{display:inline-block;background:var(--gold);color:#fff;font-family:"Helvetica Neue",Arial,sans-serif;
+    font-weight:700;font-size:22px;padding:8px 22px;border-radius:100px;margin:10px 0 4px;letter-spacing:.05em}
+
+  .ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .ach{background:var(--card);border-radius:18px;box-shadow:0 8px 20px var(--shadow);padding:16px 12px;text-align:center}
+  .ach.locked{opacity:.4;filter:grayscale(1)}
+  .ach .ico{font-size:34px}
+  .ach .nm{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;font-weight:700;margin-top:6px}
+  .ach .ds{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:#98928a;margin-top:2px;line-height:1.35}
+
+  .stats{display:flex;gap:12px;margin-bottom:18px}
+  .stat{flex:1;background:var(--card);border-radius:16px;box-shadow:0 8px 20px var(--shadow);padding:14px;text-align:center}
+  .stat .n{font-family:"Helvetica Neue",Arial,sans-serif;font-size:22px;font-weight:800;color:var(--sky)}
+  .stat .l{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:#98928a;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+  .catgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .catbtn{background:var(--card);border:none;border-radius:16px;box-shadow:0 8px 20px var(--shadow);padding:18px 12px;text-align:center;cursor:pointer}
+  .catbtn:active{transform:scale(.98)}
+  .catbtn .ci{font-size:28px}
+  .catbtn .cn{font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;font-weight:700;margin-top:6px}
+  .catbtn .cc{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:#98928a;margin-top:2px}
+
+  .lvlrow{display:flex;gap:8px;margin:2px 0 16px}
+  .lvlchip{flex:1;background:#e9e1d1;border:none;border-radius:100px;padding:10px;font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:14px;font-weight:700;cursor:pointer;color:#6d665a}
+  .lvlchip.on{background:var(--sky);color:#fff}
+
+  .wordlist{display:flex;flex-direction:column;gap:8px}
+  .wrow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;box-shadow:0 6px 16px var(--shadow);padding:12px 14px}
+  .wrow .wtext{flex:1;min-width:0}
+  .wrow .ww{font-family:"Helvetica Neue",Arial,sans-serif;font-size:17px;font-weight:700}
+  .wrow .wtr{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:#7d7669;margin-top:2px}
+  .wrow .wl{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;font-weight:700;color:#fff;background:var(--gold);border-radius:100px;padding:2px 8px}
+  .wrow .wsay{background:none;border:none;font-size:20px;cursor:pointer}
+
+  .codebox{width:100%;font-family:"Courier New",monospace;font-size:12px;line-height:1.5;
+    border:2px solid #e0d8c8;border-radius:14px;padding:14px;background:#fffdf9;color:#5a5346;resize:none;height:110px;margin-bottom:12px}
+  .codebox:focus{outline:none;border-color:var(--sky)}
+
+  nav{display:flex;flex-shrink:0;background:var(--card);box-shadow:0 -4px 20px rgba(28,36,48,.08);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+  nav button{flex:1;background:none;border:none;padding:7px 2px;cursor:pointer;
+    font-family:"Helvetica Neue",Arial,sans-serif;font-size:10.5px;color:#a49d92;display:flex;flex-direction:column;align-items:center;gap:3px}
+  nav button .ni{font-size:21px;line-height:1}
+  nav button.active{color:var(--sky);font-weight:700}
+  .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 60px);transform:translateX(-50%) translateY(-20px);
+    background:var(--ink);color:#fff;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;font-weight:600;
+    padding:12px 20px;border-radius:100px;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;transition:all .35s;z-index:50;pointer-events:none;max-width:90%;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hide{display:none !important}
+  .center{text-align:center}
+  .sp{height:8px}
+  .back{background:none;border:none;font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;color:var(--sky);
+    cursor:pointer;padding:4px 0;margin-bottom:8px;font-weight:600}
+  .feedbar{text-align:center;font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:15px;margin-top:14px;min-height:22px}
+  .feedbar.ok{color:var(--leaf)}
+  .feedbar.no{color:var(--wrong)}
+</style>
+</head>
+<body>
+  <header>
+    <span class="brand">Alperen's English</span>
+    <span class="streak" id="streak">🔥 0</span>
+  </header>
+  <main><div class="wrap" id="view"></div></main>
+  <nav id="nav">
+    <button data-tab="home" class="active"><span class="ni">🏠</span>Ana Sayfa</button>
+    <button data-tab="lessons"><span class="ni">📚</span>Dersler</button>
+    <button data-tab="words"><span class="ni">📖</span>Kelimeler</button>
+    <button data-tab="game"><span class="ni">🎮</span>Oyun</button>
+    <button data-tab="ach"><span class="ni">🏅</span>Başarılar</button>
+  </nav>
+  <div class="toast" id="toast"></div>
+
+<script>
+const OXFORD={"noun":{"B2":["advance","affair","agency","agenda","aid","aircraft","anger","angle","anniversary","appeal","approach","approval","arms","aspect","assessment","association","attempt","attorney","bacteria","barrier","being","bond","breast","budget","bullet","bunch","bush","cancer","capacity","cast","chairman","characteristic","circumstance","citizen","combination","comfort","command","commission","commitment","committee","component","concentration","concept","concern","confidence","conflict","congress","consideration","construction","contest","contract","contribution","core","council","county","courage","crash","creation","creature","crew","crisis","criterion","critic","criticism","crop","curve","debate","debt","decoration","defense","delivery","demand","depth","desire","discipline","disk","distribution","division","dozen","draft","edition","emphasis","enthusiasm","estate","examination","excuse","executive","existence","expectation","expense","exploration","extent","facility","failure","faith","fault","feather","fee","feedback","finance","finding","firm","flame","flash","fortune","freedom","frequency","fund","funding","gang","genre","goods","governor","harm","hearing","heaven","heel","hell","honor","household","housing","humor","hunting","illustration","imagination","inch","incident","income","infection","initiative","inquiry","insight","instance","institute","institution","insurance","investigation","investment","joy","judgment","justice","labor","landscape","leadership","league","license","load","loan","lord","lung","majority","mass","master","means","measurement","mineral","minister","minority","mission","monitor","motor","nerve","nightmare","notion","objective","obligation","observation","offense","opening","opponent","opposition","organ","origin","outcome","outline","pace","panel","participant","passage","perspective","phase","phenomenon","philosophy","pile","pitch","popularity","praise","preparation","presence","principle","priority","privacy","procedure","proof","proposal","prospect","protection","psychologist","psychology","publication","purchase","rank","reduction","regulation","relief","remark","representative","reputation","requirement","reserve","resident","resort","revolution","reward","rhythm","root","rubber","satellite","saving","scale","sector","selection","self","senate","senator","sequence","session","shade","shadow","shame","shelter","shock","shooting","shot","silence","silk","slope","soul","specialist","species","status","steel","stock","stream","sum","surgery","sympathy","tale","tank","tear","therapy","threat","tone","transition","trial","trust","tune","tunnel","universe","van","venue","victory","violence","vision","vitamin","volume","wage","weakness","wealth","wildlife","wire","witness","wound","zone"],"A1":["action","activity","actor","actress","address","adult","advice","afternoon","age","air","airport","animal","answer","apartment","apple","area","arm","art","article","artist","aunt","baby","back","bag","ball","banana","band","bar","baseball","basketball","bath","bathroom","beach","bed","bedroom","beer","beginning","bicycle","bike","bill","bird","birthday","blog","boat","body","book","boot","bottle","box","boy","boyfriend","bread","breakfast","brother","building","bus","business","butter","cafe","cake","camera","capital","car","card","career","carrot","cat","cent","center","chair","chart","cheese","chicken","child","chocolate","city","class","classroom","clothes","club","coat","coffee","college","color","company","computer","concert","conversation","cooking","cost","country","course","cousin","cow","cream","culture","cup","customer","dad","dance","dancer","dancing","date","daughter","day","description","design","desk","detail","dialogue","dictionary","diet","difference","dinner","dish","doctor","dog","dollar","door","dress","drink","driver","ear","east","egg","elephant","email","end","euro","evening","event","exam","example","exercise","eye","face","fact","family","farm","farmer","father","feeling","festival","fire","fish","flight","floor","flower","food","foot","football","form","friend","front","fruit","fun","future","game","garden","geography","girl","girlfriend","glass","grandfather","grandmother","grandparent","group","guitar","gym","hair","half","hand","hat","head","health","history","hobby","home","homework","horse","hospital","hotel","hour","house","husband","ice","idea","information","interest","internet","interview","island","jacket","jeans","job","juice","key","kitchen","land","language","leg","lesson","letter","library","life","line","lion","list","love","lunch","machine","magazine","mall","man","map","market","meal","meaning","meat","meeting","member","menu","message","meter","midnight","mile","milk","minute","mistake","model","mom","moment","money","month","morning","mother","mountain","mouse","mouth","movie","museum","music","name","neighbor","neighborhood","news","newspaper","night","north","nose","note","number","nurse","object","ocean","office","onion","opinion","orange","order","page","painting","pair","pants","paper","paragraph","parent","park","part","partner","party","passport","pen","pencil","people","pepper","period","person","phone","photo","photograph","phrase","piano","picture","piece","pig","place","plan","plane","plant","player","point","police","policeman","pool","post","potato","pound","practice","price","problem","product","program","project","quarter","question","radio","rain","reader","reading","reason","report","restaurant","result","rice","river","road","room","routine","rule","salad","salt","sandwich","school","science","scientist","section","sentence","sheep","shirt","shoe","shop","shopping","shower","singer","sister","situation","skill","skirt","snake","snow","son","song","sound","soup","south","space","spelling","sport","spring","star","statement","station","store","story","street","student","study","style","subject","success","sugar","summer","sun","supermarket","sweater","swimming","table","taxi","tea","teacher","team","teenager","telephone","television","tennis","test","text","theater","thing","ticket","time","title","toilet","tomato","tooth","topic","tourist","town","traffic","train","tree","trip","truck","type","umbrella","uncle","university","vacation","vegetable","video","visitor","waiter","wall","water","way","weather","website","week","weekend","west","wife","window","wine","winter","woman","word","worker","world","writer","writing","yard","year"],"B1":["access","account","achievement","ad","addition","administration","agent","agreement","alarm","album","alcohol","ambition","analysis","announcement","application","appointment","arrival","assignment","atmosphere","attitude","attraction","authority","balance","base","basis","battery","battle","beauty","bee","belief","bell","bomb","border","branch","brand","breath","breathing","bride","bubble","cable","campaign","candidate","cap","captain","category","ceiling","celebration","ceremony","chain","challenge","champion","channel","chapter","charge","chest","childhood","clause","client","cloth","clue","coal","coin","collection","communication","comparison","competitor","complaint","conclusion","connection","consequence","consumer","contact","container","content","contrast","corn","costume","cotton","countryside","court","cupboard","currency","curtain","custom","damage","decade","definition","departure","destination","development","diagram","diamond","difficulty","dirt","disadvantage","discount","district","documentary","doubt","drum","dust","duty","earthquake","economy","edge","editor","effort","election","element","emergency","emotion","employment","enemy","engineering","entertainment","entrance","entry","episode","exchange","excitement","exhibition","exit","explosion","export","favor","fence","fighting","file","fitness","flag","flood","flour","folk","force","frame","friendship","fuel","function","fur","garage","generation","gentleman","ghost","glove","grade","graduate","grain","growth","guard","happiness","headline","heating","helicopter","highway","horror","host","hurricane","hurry","identity","immigrant","impact","import","importance","impression","improvement","influence","ingredient","intelligence","intention","iron","issue","journal","journey","judge","keyboard","killing","label","laboratory","lack","layer","leaf","leather","leisure","length","limit","lip","liquid","literature","location","loss","luxury","magic","management","marketing","marriage","mess","mixture","mood","mud","murder","muscle","mystery","nail","narrative","nation","needle","net","occasion","operation","organizer","package","pan","passion","path","payment","percentage","performance","photographer","photography","pin","pipe","planning","pleasure","plot","poem","poet","poetry","poison","policy","politician","politics","port","portrait","pot","poverty","powder","prayer","prediction","presentation","pressure","priest","prince","princess","principal","printing","prisoner","producer","production","profession","profit","property","protest","punishment","qualification","quotation","racing","range","reaction","reality","receipt","recommendation","reference","relation","religion","rent","reservation","resource","respect","responsibility","risk","robot","rope","row","safety","sailor","sample","sand","script","sculpture","security","seed","servant","setting","sex","shelf","shell","shift","sight","signal","similarity","slave","slice","software","soil","spending","spirit","spot","stadium","staff","standard","statistic","statue","stranger","strength","string","studio","stuff","substance","summary","supply","supporter","surface","symptom","tail","talent","tape","tax","technique","tent","theme","theory","throat","tire","toe","ton","tongue","trade","trainer","translation","treatment","trend","trick","truth","tube","underwear","unemployment","union","value","version","victim","viewer","volunteer","vote","warning","waste","weapon","wing","wool","youth"],"A2":["ability","accident","advantage","adventure","advertisement","advertising","airline","alternative","amount","ankle","app","appearance","architect","architecture","argument","army","arrangement","assistant","athlete","attack","attention","audience","author","award","background","bean","beef","behavior","belt","benefit","biology","birth","bit","block","blood","board","bone","boss","bottom","bowl","brain","bridge","businessman","button","camp","camping","campus","can","candy","care","carpet","cartoon","case","cash","cause","celebrity","cell","century","chance","character","charity","chef","chemistry","chip","choice","church","cigarette","circle","clerk","climate","closet","clothing","cloud","coach","coast","code","colleague","column","comedy","comment","community","competition","condition","conference","context","continent","control","cookie","copy","corner","couple","credit","crime","criminal","crowd","cycle","danger","data","death","decision","degree","dentist","department","desert","designer","dessert","detective","device","diary","direction","director","disaster","discovery","discussion","disease","distance","document","drama","drawing","dream","driving","drug","earth","education","effect","electricity","elevator","employee","employer","ending","energy","engine","engineer","environment","equipment","error","essay","evidence","experience","experiment","expert","explanation","expression","factor","factory","fan","farming","fashion","fear","feature","fever","fiction","field","figure","film","finger","fishing","flu","flying","forest","fork","frog","furniture","gallery","gap","garbage","gas","gate","gift","goal","god","gold","golf","government","grass","grocery","ground","guest","guide","gun","guy","habit","hall","headache","heart","heat","height","hero","hill","hockey","hole","holiday","illness","image","individual","industry","injury","insect","instruction","instructor","instrument","introduction","invention","invitation","item","jam","jazz","jewelry","joke","journalist","kid","kilometer","king","knee","knife","knowledge","lab","lady","lake","lamp","laptop","laughter","law","lawyer","leader","learning","lecture","lemon","level","lifestyle","link","listener","luck","mail","manager","manner","material","math","mathematics","matter","mayor","media","medicine","memory","metal","method","middle","mind","mirror","monkey","moon","motorcycle","movement","musician","nature","neck","network","noise","novel","nut","officer","oil","opportunity","option","organization","oven","owner","pain","painter","palace","parking","passenger","patient","pattern","peace","penny","percent","permission","personality","pet","physics","pilot","planet","plastic","plate","platform","pocket","pollution","pop","population","position","possession","possibility","poster","power","president","printer","prison","prize","process","professor","profile","progress","purpose","quality","quantity","queen","railroad","rate","reception","recipe","record","recording","refrigerator","region","relationship","reporter","request","research","researcher","response","review","ring","role","roof","route","runner","running","sailing","salary","sale","sauce","scene","schedule","screen","sea","search","season","seat","secretary","sense","series","service","shape","sheet","ship","shoulder","side","sign","silver","singing","sir","site","size","skiing","skin","sky","smartphone","smoke","smoking","sneaker","soap","soccer","society","sock","soldier","solution","sort","source","speaker","speech","speed","spider","spoon","stage","stair","stamp","state","step","stomach","stone","storm","stove","strategy","stress","structure","subway","suggestion","suit","surprise","survey","symbol","system","tablet","target","task","taste","teaching","technology","temperature","term","thief","thinking","thought","tip","tool","top","tour","tourism","towel","tower","toy","track","tradition","training","transportation","trash","traveler","trouble","twin","understanding","uniform","unit","user","valley","variety","vehicle","view","village","virus","voice","war","washing","wave","web","wedding","weight","wheel","wind","winner","wood"]},"verb":{"B2":["abandon","accompany","accuse","acknowledge","acquire","adapt","adopt","alter","approve","arise","assess","associate","assume","beg","bet","blame","broadcast","calculate","cancel","capture","cite","collapse","conduct","construct","contribute","convert","criticize","cure","declare","decline","decorate","decrease","defeat","defend","delay","demonstrate","deny","deserve","detect","dig","dismiss","display","distribute","dominate","drag","edit","elect","emerge","emphasize","enable","encounter","engage","enhance","ensure","establish","estimate","evaluate","exhibit","expose","extend","float","forgive","found","gain","generate","govern","grab","grant","guarantee","handle","hesitate","illustrate","imply","impose","impress","inform","insist","inspire","install","interpret","interrupt","justify","launch","lean","lower","maintain","melt","modify","mount","multiply","obey","observe","obtain","offend","operate","oppose","owe","permit","pose","possess","preserve","propose","pursue","recall","recover","regard","register","regret","rely","rescue","resist","resolve","retain","reveal","rid","rub","rush","satisfy","scream","secure","seek","select","settle","shall","slide","slip","split","sponsor","stare","stretch","strike","struggle","submit","surround","suspect","swear","sweep","tear","threaten","transfer","transform","urge","vary","whisper","wind","wrap"],"B1":["admire","admit","advise","afford","aim","announce","annoy","apologize","appreciate","arrest","assist","attach","attract","bake","ban","bend","bite","bother","breathe","bury","cheat","claim","click","combine","commit","concentrate","conclude","confirm","confuse","consist","consume","convince","define","deliver","determine","dislike","divide","donate","educate","encourage","entertain","escape","examine","expand","explode","explore","fasten","flow","fold","freeze","frighten","fry","gather","hang","highlight","hire","hunt","ignore","indicate","injure","intend","invest","investigate","kick","kiss","lay","locate","measure","mix","occur","ought","participate","persuade","pour","pray","press","pretend","promote","prove","punish","qualify","quit","quote","reflect","reject","relate","release","remain","remind","represent","require","retire","revise","roll","scan","shine","shoot","sink","spread","suffer","summarize","survive","switch","tend","translate","transport","treat","update","warn","weigh","wonder"],"A1":["add","agree","arrive","ask","be","become","begin","believe","born","break","bring","build","buy","call","can","cannot","carry","change","check","choose","climb","close","come","compare","cook","could","create","cut","decide","describe","die","discuss","do","draw","drive","eat","enjoy","explain","fall","feel","fill","find","finish","fly","follow","forget","get","give","go","grow","guess","happen","hate","have","hear","help","hope","imagine","improve","include","introduce","join","keep","know","laugh","learn","leave","let","lie","listen","live","look","lose","make","mean","meet","miss","move","must","need","paint","pay","play","prefer","prepare","put","read","relax","remember","repeat","return","ride","run","say","see","sell","send","share","should","show","sing","sit","sleep","speak","spell","spend","stand","start","stay","stop","swim","take","talk","teach","tell","thank","think","travel","try","turn","understand","use","visit","wait","wake","walk","want","wash","watch","wear","will","win","work","would","write"],"A2":["accept","achieve","act","advertise","affect","allow","analyze","appear","apply","argue","arrange","attend","avoid","beat","behave","belong","blow","boil","borrow","brush","burn","catch","celebrate","chat","collect","communicate","compete","complain","connect","consider","contain","continue","count","cover","cross","cry","deal","depend","destroy","develop","disagree","disappear","discover","download","drop","earn","employ","enter","exist","expect","express","fail","feed","fight","fit","fix","focus","greet","hide","hit","hold","hurt","identify","increase","invent","invite","involve","jump","kill","knock","lead","lend","lift","lock","manage","mark","marry","may","mention","might","notice","offer","organize","pack","pass","perform","pick","predict","prevent","print","produce","promise","pronounce","protect","provide","publish","pull","push","raise","reach","react","realize","receive","recognize","recommend","recycle","reduce","refer","refuse","remove","repair","replace","reply","respond","ring","rise","sail","save","score","seem","serve","shake","shout","shut","ski","smell","smile","solve","steal","succeed","suggest","support","suppose","throw","tie","touch","wish","worry"]},"adjective":{"B2":["absolute","acceptable","accurate","actual","additional","aggressive","annual","anxious","apparent","appropriate","armed","artificial","artistic","ashamed","associated","bent","bitter","blind","brief","broad","capable","chief","civil","classic","complicated","concerned","confusing","conscious","conservative","consistent","constant","contemporary","convinced","corporate","critical","crucial","curved","decent","deliberate","depressed","depressing","desperate","detailed","dishonest","domestic","downward","dramatic","efficient","elderly","emotional","enthusiastic","entire","ethical","evil","external","extraordinary","fellow","flexible","folding","former","fundamental","grand","harmful","hollow","holy","humorous","impatient","impressed","industrial","initial","inner","intended","intense","internal","junior","limited","lively","logical","long-term","loose","massive","matching","maximum","military","minimum","minor","mixed","moral","multiple","mysterious","numerous","offensive","opposed","outer","overall","permanent","plain","pointed","potential","pregnant","prime","pure","rapid","raw","realistic","reasonable","regional","relevant","rural","satisfied","senior","sensitive","severe","shallow","shocked","significant","sincere","slight","solar","spiritual","stable","steady","steep","sticky","stiff","strict","surrounding","temporary","tough","tropical","unconscious","unexpected","unique","unknown","upper","urban","vast","virtual","visual","vital","wealthy","willing","wise"],"A2":["able","active","alive","alone","ancient","asleep","attractive","available","average","awful","based","blank","bright","brilliant","broken","careful","certain","classical","clear","close","closed","comfortable","connected","crazy","creative","crowded","curly","daily","dead","deep","digital","direct","divorced","double","dry","electric","electrical","electronic","empty","enormous","everyday","exact","excellent","extreme","fair","female","flat","following","foreign","formal","fresh","further","general","heavy","helpful","huge","human","ideal","ill","impossible","included","incredible","independent","informal","intelligent","international","lazy","likely","lost","loud","low","lucky","major","male","medical","missing","musical","narrow","national","necessary","nervous","noisy","normal","ordinary","original","particular","physical","pleased","polite","professional","public","recent","regular","round","rude","safe","scared","scary","secret","separate","serious","simple","single","social","soft","specific","square","strange","stupid","successful","surprised","surprising","sweet","teenage","thick","thin","traditional","typical","underground","unhappy","united","unusual","usual","weak","wet","whole","wide","wild","wooden","working","worried","worse","worst"],"B1":["academic","advanced","alcoholic","amazed","annoyed","annoying","automatic","aware","basic","brave","calm","careless","central","cheerful","chemical","clever","colored","commercial","competitive","complex","confident","confused","continuous","convenient","covered","cruel","cultural","current","definite","determined","disappointed","disappointing","dressed","drunk","due","eastern","economic","educated","educational","effective","embarrassed","embarrassing","engaged","environmental","equal","essential","expected","experienced","familiar","fancy","fascinating","fashionable","federal","financial","fixed","frightened","frightening","frozen","generous","gentle","giant","glad","global","grateful","guilty","historic","historical","honest","horrible","illegal","imaginary","immediate","impressive","indirect","indoor","injured","innocent","involved","latest","leading","legal","live","living","located","lonely","mad","medium","mental","mild","native","neat","northern","nuclear","obvious","odd","official","old-fashioned","organized","outdoor","painful","pale","peaceful","pleasant","poisonous","political","powerful","practical","prepared","previous","primary","private","proper","proud","qualified","rare","related","relative","relaxed","relaxing","reliable","religious","remote","repeated","responsible","retired","romantic","rough","royal","scientific","secondary","sensible","sexual","sharp","shiny","shy","silent","silly","smooth","solid","southern","spicy","spoken","sudden","suitable","talented","technical","tight","tiny","total","ugly","unable","uncomfortable","unemployed","unfair","unlikely","unnecessary","unpleasant","upset","used","valuable","various","violent","western","worldwide","worth","written"],"A1":["afraid","amazing","angry","awesome","bad","beautiful","best","better","big","black","blond","blue","bored","boring","brown","busy","cheap","clean","cold","common","complete","cool","correct","dangerous","dark","dear","delicious","different","difficult","dirty","early","easy","excited","exciting","expensive","extra","false","famous","fantastic","fast","fat","favorite","final","fine","free","friendly","full","funny","good","gray","great","green","happy","hard","healthy","high","hot","hungry","important","interested","interesting","large","late","left","little","local","long","main","married","modern","natural","negative","new","next","nice","old","online","only","open","opposite","past","perfect","personal","pink","poor","popular","positive","possible","present","pretty","purple","quick","quiet","ready","real","red","rich","right","sad","same","short","sick","similar","slow","small","smart","sorry","special","strong","sure","tall","terrible","thirsty","tired","true","useful","warm","white","wonderful","wrong","yellow","young"]},"adverb":{"A1":["again","ago","also","always","away","below","down","downstairs","else","even","ever","far","here","how","however","just","later","maybe","never","not","now","off","often","once","outside","probably","quickly","quite","really","so","sometimes","soon","still","then","there","today","together","tomorrow","tonight","too","twice","up","upstairs","usually","very","well","when","where","why","yesterday"],"B2":["abroad","afterward","apparently","aside","basically","closely","commonly","constantly","deeply","deliberately","elsewhere","entirely","fully","furthermore","gradually","increasingly","initially","largely","nevertheless","occasionally","otherwise","partly","rapidly","relatively","significantly","somewhat","thus","truly","ultimately","upward","widely"],"B1":["absolutely","ahead","apart","approximately","automatically","backward","currently","directly","effectively","equally","eventually","fairly","forever","frequently","generally","hardly","heavily","highly","incredibly","indeed","indoors","mainly","meanwhile","naturally","necessarily","obviously","originally","outdoors","particularly","perfectly","personally","possibly","previously","properly","rarely","regularly","seriously","similarly","simply","slightly","specifically","strongly","successfully","surely","therefore","totally","typically"],"A2":["actually","almost","already","anymore","anyway","anywhere","badly","carefully","certainly","clearly","completely","correctly","definitely","differently","downtown","easily","especially","everywhere","exactly","extremely","finally","fortunately","forward","happily","immediately","instead","loudly","mostly","nearly","normally","nowhere","overseas","perhaps","quietly","rather","recently","sadly","slowly","somewhere","straight","suddenly","unfortunately","yet"]},"preposition":{"A1":["about","above","across","after","around","as","at","before","behind","between","by","during","for","from","in","into","near","of","on","over","through","to","under","with","without"],"A2":["against","along","among","except","including","inside","onto","per","since","toward"],"B2":["beyond","via"],"B1":["despite","plus","unlike","upon","within"]},"conjunction":{"A2":["although","while"],"A1":["and","because","but","if","or","than"],"B1":["though","unless","whenever","whether"],"B2":["whereas","wherever"]},"pronoun":{"A2":["anybody","hers","herself","himself","itself","myself","none","ourselves","themselves","yours"],"A1":["anyone","anything","everybody","everyone","everything","he","her","him","it","lot","me","nobody","nothing","she","somebody","someone","something","them","they","us","we","who","you","yourself"],"B1":["ours","plenty","theirs"],"B2":["whom"]},"determiner":{"A1":["all","an","another","any","both","enough","every","first","his","its","many","more","most","much","my","our","some","that","the","their","this","your"],"A2":["either","least","less","neither","several","such","whose"],"B1":["whatever"]},"number":{"A2":["billion","zero"],"A1":["eight","eighteen","eighty","eleven","fifteen","fifth","fifty","five","forty","four","fourteen","fourth","hundred","million","nine","nineteen","ninety","seven","seventeen","seventy","six","sixteen","sixty","ten","third","thirteen","thirty","thousand","three","twelve","twenty","two"]},"exclamation":{"A2":["ah","wow"],"A1":["bye","hey","hi","no","oh","please","thanks","welcome","yeah","yes"]}};
+const TR={"abandon":"terk etmek","ability":"yetenek","able":"muktedir, -ebilen","about":"hakkında","above":"yukarıda, üstünde","abroad":"yurt dışında","absolute":"mutlak","absolutely":"kesinlikle","academic":"akademik","accept":"kabul etmek","acceptable":"kabul edilebilir","access":"erişim","accident":"kaza","accompany":"eşlik etmek","account":"hesap","accurate":"doğru, kesin","accuse":"suçlamak","achieve":"başarmak","achievement":"başarı","acknowledge":"kabul etmek, onaylamak","acquire":"edinmek","across":"karşıdan karşıya, boyunca","act":"davranmak; eylem","action":"eylem","active":"aktif, etkin","activity":"etkinlik","actor":"aktör","actress":"aktris","actual":"gerçek","actually":"aslında","ad":"reklam","adapt":"uyarlamak, uyum sağlamak","add":"eklemek","addition":"ekleme, toplama","additional":"ek, ilave","address":"adres","administration":"yönetim","admire":"hayran olmak","admit":"itiraf etmek, kabul etmek","adopt":"benimsemek, evlat edinmek","adult":"yetişkin","advance":"ilerleme","advanced":"ileri düzey","advantage":"avantaj","adventure":"macera","advertise":"reklam yapmak","advertisement":"reklam","advertising":"reklamcılık","advice":"tavsiye","advise":"tavsiye etmek","affair":"mesele, ilişki","affect":"etkilemek","afford":"gücü yetmek","afraid":"korkmuş","after":"-den sonra","afternoon":"öğleden sonra","afterward":"sonradan","again":"tekrar","against":"-e karşı","age":"yaş","agency":"acente, ajans","agenda":"gündem","agent":"ajan, temsilci","aggressive":"agresif, saldırgan","ago":"önce","agree":"katılmak, anlaşmak","agreement":"anlaşma","ah":"ah","ahead":"ileride, önde","aid":"yardım","aim":"amaçlamak; amaç","air":"hava","aircraft":"uçak","airline":"havayolu","airport":"havaalanı","alarm":"alarm","album":"albüm","alcohol":"alkol","alcoholic":"alkollü, alkolik","alive":"canlı, hayatta","all":"hepsi, tüm","allow":"izin vermek","almost":"neredeyse","alone":"yalnız","along":"boyunca","already":"zaten","also":"ayrıca","alter":"değiştirmek","alternative":"alternatif","although":"-e rağmen, her ne kadar","always":"her zaman","amazed":"şaşkın, hayret etmiş","amazing":"harika, şaşırtıcı","ambition":"hırs, tutku","among":"arasında","amount":"miktar","analysis":"analiz","analyze":"analiz etmek","ancient":"antik, eski","and":"ve","anger":"öfke","angle":"açı","angry":"kızgın","animal":"hayvan","ankle":"ayak bileği","anniversary":"yıldönümü","announce":"duyurmak","announcement":"duyuru","annoy":"rahatsız etmek, sinir etmek","annoyed":"kızgın, rahatsız","annoying":"can sıkıcı","annual":"yıllık","another":"başka bir, bir diğer","answer":"cevap; cevaplamak","anxious":"endişeli","any":"herhangi","anybody":"herhangi biri","anymore":"artık","anyone":"herhangi biri","anything":"herhangi bir şey","anyway":"neyse, her neyse","anywhere":"herhangi bir yer","apart":"ayrı","apartment":"daire","apologize":"özür dilemek","app":"uygulama","apparent":"belli, görünür","apparently":"görünüşe göre","appeal":"çekicilik; başvuru","appear":"görünmek, ortaya çıkmak","appearance":"görünüş","apple":"elma","application":"uygulama, başvuru","apply":"başvurmak, uygulamak","appointment":"randevu","appreciate":"takdir etmek, minnettar olmak","approach":"yaklaşım; yaklaşmak","appropriate":"uygun","approval":"onay","approve":"onaylamak","approximately":"yaklaşık olarak","architect":"mimar","architecture":"mimarlık","area":"alan, bölge","argue":"tartışmak","argument":"tartışma, argüman","arise":"ortaya çıkmak","arm":"kol","armed":"silahlı","arms":"silahlar","army":"ordu","around":"etrafında","arrange":"düzenlemek, ayarlamak","arrangement":"düzenleme","arrest":"tutuklamak","arrival":"varış","arrive":"varmak","art":"sanat","article":"makale","artificial":"yapay","artist":"sanatçı","artistic":"sanatsal","as":"olarak, -dığı gibi","ashamed":"utanmış","aside":"kenara","ask":"sormak, istemek","asleep":"uyumuş","aspect":"yön, açı","assess":"değerlendirmek","assessment":"değerlendirme","assignment":"ödev, görev","assist":"yardım etmek","assistant":"yardımcı, asistan","associate":"ilişkilendirmek","associated":"ilişkili","association":"dernek, ilişki","assume":"varsaymak","athlete":"atlet, sporcu","atmosphere":"atmosfer, ortam","attach":"eklemek, iliştirmek","attack":"saldırı; saldırmak","attempt":"girişim; teşebbüs etmek","attend":"katılmak","attention":"dikkat","attitude":"tutum, tavır","attorney":"avukat","attract":"çekmek, cezbetmek","attraction":"çekim, cazibe","attractive":"çekici","audience":"seyirci, izleyici","aunt":"teyze, hala","author":"yazar","authority":"otorite, yetki","automatic":"otomatik","automatically":"otomatik olarak","available":"mevcut, müsait","average":"ortalama","avoid":"kaçınmak","award":"ödül","aware":"farkında","away":"uzakta","awesome":"harika","awful":"korkunç, berbat","baby":"bebek","back":"arka, sırt; geri","background":"arka plan","backward":"geriye doğru","bacteria":"bakteri","bad":"kötü","badly":"kötü bir şekilde","bag":"çanta","bake":"fırında pişirmek","balance":"denge","ball":"top","ban":"yasaklamak; yasak","banana":"muz","band":"grup, müzik grubu","bar":"bar; çubuk","barrier":"engel, bariyer","base":"temel; üs","baseball":"beyzbol","based":"dayalı","basic":"temel","basically":"temelde, aslında","basis":"esas, temel","basketball":"basketbol","bath":"banyo, küvet","bathroom":"banyo","battery":"pil, batarya","battle":"savaş, mücadele","be":"olmak","beach":"plaj, sahil","bean":"fasulye","beat":"yenmek; vuruş","beautiful":"güzel","beauty":"güzellik","because":"çünkü","become":"olmak, -e dönüşmek","bed":"yatak","bedroom":"yatak odası","bee":"arı","beef":"sığır eti","beer":"bira","before":"-den önce","beg":"yalvarmak, dilenmek","begin":"başlamak","beginning":"başlangıç","behave":"davranmak","behavior":"davranış","behind":"arkasında","being":"varlık","belief":"inanç","believe":"inanmak","bell":"zil, çan","belong":"ait olmak","below":"aşağıda","belt":"kemer","bend":"bükmek, eğmek","benefit":"fayda; yarar sağlamak","bent":"eğik, bükülmüş","best":"en iyi","bet":"bahis; bahse girmek","better":"daha iyi","between":"arasında","beyond":"ötesinde","bicycle":"bisiklet","big":"büyük","bike":"bisiklet","bill":"fatura, hesap","billion":"milyar","biology":"biyoloji","bird":"kuş","birth":"doğum","birthday":"doğum günü","bit":"parça, biraz","bite":"ısırmak; ısırık","bitter":"acı","black":"siyah","blame":"suçlamak","blank":"boş","blind":"kör","block":"blok; engellemek","blog":"blog","blond":"sarışın","blood":"kan","blow":"üflemek, esmek","blue":"mavi","board":"tahta, kurul","boat":"tekne, bot","body":"vücut, beden","boil":"kaynatmak, kaynamak","bomb":"bomba","bond":"bağ","bone":"kemik","book":"kitap; rezervasyon yapmak","boot":"bot, çizme","border":"sınır","bored":"sıkılmış","boring":"sıkıcı","born":"doğmuş","borrow":"ödünç almak","boss":"patron","both":"her ikisi","bother":"rahatsız etmek","bottle":"şişe","bottom":"alt, dip","bowl":"kase","box":"kutu","boy":"erkek çocuk","boyfriend":"erkek arkadaş","brain":"beyin","branch":"dal, şube","brand":"marka","brave":"cesur","bread":"ekmek","break":"kırmak; mola","breakfast":"kahvaltı","breast":"göğüs","breath":"nefes","breathe":"nefes almak","breathing":"nefes alma","bride":"gelin","bridge":"köprü","brief":"kısa, özet","bright":"parlak","brilliant":"parlak, mükemmel","bring":"getirmek","broad":"geniş","broadcast":"yayın; yayınlamak","broken":"kırık","brother":"erkek kardeş","brown":"kahverengi","brush":"fırça; fırçalamak","bubble":"kabarcık, baloncuk","budget":"bütçe","build":"inşa etmek","building":"bina","bullet":"kurşun, mermi","bunch":"demet, grup","burn":"yanmak, yakmak","bury":"gömmek","bus":"otobüs","bush":"çalı","business":"iş, ticaret","businessman":"iş adamı","busy":"meşgul","but":"ama, fakat","butter":"tereyağı","button":"düğme","buy":"satın almak","by":"ile, tarafından","bye":"hoşça kal","cable":"kablo","cafe":"kafe","cake":"kek, pasta","calculate":"hesaplamak","call":"aramak; çağrı","calm":"sakin","camera":"kamera","camp":"kamp","campaign":"kampanya","camping":"kamp yapma","campus":"kampüs","can":"-ebilmek; teneke, konserve","cancel":"iptal etmek","cancer":"kanser","candidate":"aday","candy":"şeker, şekerleme","cannot":"-emez","cap":"şapka, kep","capable":"yetenekli","capacity":"kapasite","capital":"başkent; sermaye","captain":"kaptan","capture":"yakalamak","car":"araba","card":"kart","care":"bakım, önem verme","career":"kariyer","careful":"dikkatli","carefully":"dikkatlice","careless":"dikkatsiz","carpet":"halı","carrot":"havuç","carry":"taşımak","cartoon":"çizgi film, karikatür","case":"durum, dava; çanta","cash":"nakit","cast":"oyuncu kadrosu; atmak","cat":"kedi","catch":"yakalamak","category":"kategori","cause":"neden; -e neden olmak","ceiling":"tavan","celebrate":"kutlamak","celebration":"kutlama","celebrity":"ünlü","cell":"hücre","cent":"sent","center":"merkez","central":"merkezi","century":"yüzyıl","ceremony":"tören","certain":"kesin, belli","certainly":"kesinlikle","chain":"zincir","chair":"sandalye","chairman":"başkan","challenge":"meydan okuma, zorluk","champion":"şampiyon","chance":"şans, fırsat","change":"değişim; değiştirmek","channel":"kanal","chapter":"bölüm","character":"karakter","characteristic":"özellik","charge":"ücret; şarj etmek, suçlamak","charity":"hayır kurumu, yardım","chart":"grafik, çizelge","chat":"sohbet etmek","cheap":"ucuz","cheat":"hile yapmak, aldatmak","check":"kontrol etmek; çek","cheese":"peynir","chef":"şef, aşçı","chemical":"kimyasal","chemistry":"kimya","chest":"göğüs; sandık","chicken":"tavuk","chief":"şef, baş","child":"çocuk","childhood":"çocukluk","chip":"cips; çip","chocolate":"çikolata","choice":"seçim","choose":"seçmek","church":"kilise","cigarette":"sigara","circle":"daire, çember","circumstance":"durum, koşul","cite":"alıntı yapmak, atıfta bulunmak","citizen":"vatandaş","city":"şehir","civil":"sivil","claim":"iddia etmek; talep","class":"sınıf","classic":"klasik","classical":"klasik","classroom":"sınıf, derslik","clause":"cümlecik, madde","clean":"temiz; temizlemek","clear":"açık, net","clearly":"açıkça","clerk":"katip, tezgahtar","clever":"zeki, akıllı","click":"tıklamak","client":"müşteri","climate":"iklim","climb":"tırmanmak","close":"kapatmak; yakın","closed":"kapalı","closely":"yakından","closet":"dolap","cloth":"kumaş, bez","clothes":"giysiler","clothing":"giyim","cloud":"bulut","club":"kulüp","clue":"ipucu","coach":"antrenör, koç","coal":"kömür","coast":"kıyı, sahil","coat":"ceket, palto","code":"kod","coffee":"kahve","coin":"madeni para","cold":"soğuk","collapse":"çökmek","colleague":"meslektaş","collect":"toplamak","collection":"koleksiyon","college":"üniversite, kolej","color":"renk","colored":"renkli","column":"sütun","combination":"kombinasyon, birleşim","combine":"birleştirmek","come":"gelmek","comedy":"komedi","comfort":"rahatlık, teselli","comfortable":"rahat","command":"komut, emir","comment":"yorum","commercial":"ticari; reklam","commission":"komisyon","commit":"işlemek, adamak","commitment":"bağlılık, taahhüt","committee":"komite","common":"yaygın, ortak","commonly":"yaygın olarak","communicate":"iletişim kurmak","communication":"iletişim","community":"topluluk","company":"şirket","compare":"karşılaştırmak","comparison":"karşılaştırma","compete":"rekabet etmek, yarışmak","competition":"rekabet, yarışma","competitive":"rekabetçi","competitor":"rakip","complain":"şikayet etmek","complaint":"şikayet","complete":"tamamlamak; tam","completely":"tamamen","complex":"karmaşık","complicated":"karmaşık","component":"bileşen, parça","computer":"bilgisayar","concentrate":"konsantre olmak, yoğunlaşmak","concentration":"konsantrasyon","concept":"kavram","concern":"endişe, ilgi","concerned":"endişeli, ilgili","concert":"konser","conclude":"sonuçlandırmak, sonuca varmak","conclusion":"sonuç","condition":"durum, koşul","conduct":"yürütmek, davranış","conference":"konferans","confidence":"güven, özgüven","confident":"kendinden emin","confirm":"onaylamak, doğrulamak","conflict":"çatışma","confuse":"kafasını karıştırmak","confused":"kafası karışmış","confusing":"kafa karıştırıcı","congress":"kongre","connect":"bağlamak","connected":"bağlı","connection":"bağlantı","conscious":"bilinçli, farkında","consequence":"sonuç","conservative":"muhafazakar","consider":"düşünmek, göz önünde bulundurmak","consideration":"değerlendirme, düşünce","consist":"oluşmak, -den ibaret olmak","consistent":"tutarlı","constant":"sabit, sürekli","constantly":"sürekli olarak","construct":"inşa etmek","construction":"inşaat","consume":"tüketmek","consumer":"tüketici","contact":"iletişim; temas etmek","contain":"içermek","container":"kap, konteyner","contemporary":"çağdaş","content":"içerik; memnun","contest":"yarışma","context":"bağlam","continent":"kıta","continue":"devam etmek","continuous":"sürekli","contract":"sözleşme","contrast":"karşıtlık, tezat","contribute":"katkıda bulunmak","contribution":"katkı","control":"kontrol","convenient":"uygun, elverişli","conversation":"konuşma, sohbet","convert":"dönüştürmek","convince":"ikna etmek","convinced":"ikna olmuş, emin","cook":"pişirmek; aşçı","cookie":"kurabiye","cooking":"yemek pişirme","cool":"serin; havalı","copy":"kopya; kopyalamak","core":"çekirdek, öz","corn":"mısır","corner":"köşe","corporate":"kurumsal","correct":"doğru; düzeltmek","correctly":"doğru şekilde","cost":"maliyet, fiyat","costume":"kostüm","cotton":"pamuk","council":"konsey, meclis","count":"saymak","country":"ülke","countryside":"kırsal, kırlık","county":"ilçe, kontluk","couple":"çift","courage":"cesaret","course":"kurs, ders; rota","court":"mahkeme; kort","cousin":"kuzen","cover":"örtmek, kapatmak; kapak","covered":"kaplı, örtülü","cow":"inek","crash":"çarpışma; çökmek","crazy":"çılgın, deli","cream":"krema, krem","create":"yaratmak, oluşturmak","creation":"yaratma, eser","creative":"yaratıcı","creature":"yaratık, canlı","credit":"kredi, itibar","crew":"ekip, mürettebat","crime":"suç","criminal":"suçlu","crisis":"kriz","criterion":"ölçüt, kriter","critic":"eleştirmen","critical":"kritik, eleştirel","criticism":"eleştiri","criticize":"eleştirmek","crop":"ekin, mahsul","cross":"geçmek; haç","crowd":"kalabalık","crowded":"kalabalık","crucial":"çok önemli, kritik","cruel":"zalim, acımasız","cry":"ağlamak","cultural":"kültürel","culture":"kültür","cup":"fincan, kupa","cupboard":"dolap","cure":"tedavi etmek; çare","curly":"kıvırcık","currency":"para birimi","current":"güncel, mevcut; akım","currently":"şu anda","curtain":"perde","curve":"eğri, kavis","curved":"eğri, kavisli","custom":"gelenek, adet","customer":"müşteri","cut":"kesmek","cycle":"döngü; bisiklete binmek","dad":"baba","daily":"günlük","damage":"hasar, zarar","dance":"dans; dans etmek","dancer":"dansçı","dancing":"dans etme","danger":"tehlike","dangerous":"tehlikeli","dark":"karanlık, koyu","data":"veri","date":"tarih; randevu","daughter":"kız evlat","day":"gün","dead":"ölü","deal":"anlaşma; ilgilenmek","dear":"sevgili, değerli","death":"ölüm","debate":"tartışma, münazara","debt":"borç","decade":"on yıl","decent":"düzgün, iyi","decide":"karar vermek","decision":"karar","declare":"beyan etmek, ilan etmek","decline":"azalmak, reddetmek","decorate":"süslemek, dekore etmek","decoration":"dekorasyon, süsleme","decrease":"azalmak, azaltmak","deep":"derin","deeply":"derinden","defeat":"yenmek; yenilgi","defend":"savunmak","defense":"savunma","define":"tanımlamak","definite":"kesin, belirli","definitely":"kesinlikle","definition":"tanım","degree":"derece; diploma","delay":"gecikme; ertelemek","deliberate":"kasıtlı","deliberately":"kasıtlı olarak","delicious":"lezzetli","deliver":"teslim etmek","delivery":"teslimat","demand":"talep; talep etmek","demonstrate":"göstermek, kanıtlamak","dentist":"diş hekimi","deny":"reddetmek, inkar etmek","department":"bölüm, departman","departure":"kalkış, ayrılış","depend":"bağlı olmak, güvenmek","depressed":"depresif, çökkün","depressing":"iç karartıcı","depth":"derinlik","describe":"tanımlamak, betimlemek","description":"tanım, betimleme","desert":"çöl; terk etmek","deserve":"hak etmek","design":"tasarım; tasarlamak","designer":"tasarımcı","desire":"arzu, istek","desk":"masa, sıra","desperate":"çaresiz, umutsuz","dessert":"tatlı","destination":"varış yeri, hedef","destroy":"yok etmek, yıkmak","detail":"ayrıntı, detay","detailed":"ayrıntılı","detect":"tespit etmek, saptamak","detective":"dedektif","determine":"belirlemek, saptamak","determined":"kararlı","develop":"geliştirmek","development":"gelişim, kalkınma","device":"cihaz, aygıt","diagram":"diyagram, şema","dialogue":"diyalog","diamond":"elmas","diary":"günlük","dictionary":"sözlük","die":"ölmek","diet":"diyet, beslenme","difference":"fark","different":"farklı","differently":"farklı şekilde","difficult":"zor","difficulty":"zorluk","dig":"kazmak","digital":"dijital","dinner":"akşam yemeği","direct":"doğrudan; yönetmek","direction":"yön","directly":"doğrudan","director":"yönetmen, müdür","dirt":"kir, toprak","dirty":"kirli","disadvantage":"dezavantaj","disagree":"katılmamak","disappear":"kaybolmak","disappointed":"hayal kırıklığına uğramış","disappointing":"hayal kırıklığı yaratan","disaster":"felaket","discipline":"disiplin","discount":"indirim","discover":"keşfetmek","discovery":"keşif","discuss":"tartışmak, görüşmek","discussion":"tartışma, görüşme","disease":"hastalık","dish":"tabak; yemek","dishonest":"dürüst olmayan","disk":"disk","dislike":"hoşlanmamak","dismiss":"kovmak, reddetmek","display":"sergilemek; ekran","distance":"mesafe","distribute":"dağıtmak","distribution":"dağıtım","district":"bölge, semt","divide":"bölmek","division":"bölme, bölüm","divorced":"boşanmış","do":"yapmak","doctor":"doktor","document":"belge","documentary":"belgesel","dog":"köpek","dollar":"dolar","domestic":"yerli, evcil","dominate":"hakim olmak, egemen olmak","donate":"bağışlamak","door":"kapı","double":"çift, iki katı","doubt":"şüphe","down":"aşağı","download":"indirmek","downstairs":"aşağı kat","downtown":"şehir merkezi","downward":"aşağı doğru","dozen":"düzine","draft":"taslak","drag":"sürüklemek","drama":"drama","dramatic":"dramatik","draw":"çizmek","drawing":"çizim, resim","dream":"rüya, hayal","dress":"elbise; giyinmek","dressed":"giyinmiş","drink":"içmek; içecek","drive":"sürmek","driver":"sürücü, şoför","driving":"araç kullanma","drop":"düşürmek; damla","drug":"ilaç, uyuşturucu","drum":"davul","drunk":"sarhoş","dry":"kuru; kurutmak","due":"vadesi gelmiş, -e bağlı","during":"sırasında","dust":"toz","duty":"görev","ear":"kulak","early":"erken","earn":"kazanmak","earth":"dünya, toprak","earthquake":"deprem","easily":"kolayca","east":"doğu","eastern":"doğu (yönü)","easy":"kolay","eat":"yemek","economic":"ekonomik","economy":"ekonomi","edge":"kenar, uç","edit":"düzenlemek","edition":"baskı, sürüm","editor":"editör","educate":"eğitmek","educated":"eğitimli","education":"eğitim","educational":"eğitimsel, öğretici","effect":"etki","effective":"etkili","effectively":"etkili bir şekilde","efficient":"verimli","effort":"çaba","egg":"yumurta","eight":"sekiz","eighteen":"on sekiz","eighty":"seksen","either":"her ikisi de, ya da","elderly":"yaşlı","elect":"seçmek","election":"seçim","electric":"elektrikli","electrical":"elektriksel","electricity":"elektrik","electronic":"elektronik","element":"öğe, element","elephant":"fil","elevator":"asansör","eleven":"on bir","else":"başka","elsewhere":"başka yerde","email":"e-posta","embarrassed":"utanmış, mahcup","embarrassing":"utandırıcı","emerge":"ortaya çıkmak","emergency":"acil durum","emotion":"duygu","emotional":"duygusal","emphasis":"vurgu","emphasize":"vurgulamak","employ":"işe almak, istihdam etmek","employee":"çalışan","employer":"işveren","employment":"istihdam, iş","empty":"boş","enable":"olanak sağlamak, mümkün kılmak","encounter":"karşılaşmak","encourage":"cesaretlendirmek, teşvik etmek","end":"son; bitmek","ending":"son, bitiş","enemy":"düşman","energy":"enerji","engage":"meşgul etmek, katılmak","engaged":"nişanlı; meşgul","engine":"motor","engineer":"mühendis","engineering":"mühendislik","enhance":"geliştirmek, artırmak","enjoy":"keyif almak, hoşlanmak","enormous":"kocaman, devasa","enough":"yeterli","ensure":"sağlamak, garanti etmek","enter":"girmek","entertain":"eğlendirmek","entertainment":"eğlence","enthusiasm":"coşku, heves","enthusiastic":"coşkulu, hevesli","entire":"bütün, tüm","entirely":"tamamen","entrance":"giriş","entry":"giriş, kayıt","environment":"çevre","environmental":"çevresel","episode":"bölüm","equal":"eşit","equally":"eşit şekilde","equipment":"ekipman, donanım","error":"hata","escape":"kaçmak","especially":"özellikle","essay":"deneme, makale","essential":"gerekli, temel","establish":"kurmak","estate":"mülk, arazi","estimate":"tahmin etmek","ethical":"etik, ahlaki","euro":"euro","evaluate":"değerlendirmek","even":"bile, hatta","evening":"akşam","event":"olay, etkinlik","eventually":"sonunda","ever":"hiç, her zaman","every":"her","everybody":"herkes","everyday":"günlük, sıradan","everyone":"herkes","everything":"her şey","everywhere":"her yer","evidence":"kanıt","evil":"kötü, şeytani","exact":"kesin, tam","exactly":"tam olarak","exam":"sınav","examination":"inceleme, sınav","examine":"incelemek, muayene etmek","example":"örnek","excellent":"mükemmel","except":"hariç","exchange":"değişim; değiştirmek","excited":"heyecanlı","excitement":"heyecan","exciting":"heyecan verici","excuse":"mazeret; affetmek","executive":"yönetici","exercise":"egzersiz, alıştırma","exhibit":"sergilemek","exhibition":"sergi","exist":"var olmak","existence":"varoluş","exit":"çıkış","expand":"genişlemek, büyütmek","expect":"beklemek","expectation":"beklenti","expected":"beklenen","expense":"gider, masraf","expensive":"pahalı","experience":"deneyim, tecrübe","experienced":"deneyimli","experiment":"deney","expert":"uzman","explain":"açıklamak","explanation":"açıklama","explode":"patlamak","exploration":"keşif, araştırma","explore":"keşfetmek, araştırmak","explosion":"patlama","export":"ihracat; ihraç etmek","expose":"maruz bırakmak, açığa çıkarmak","express":"ifade etmek","expression":"ifade","extend":"uzatmak, genişletmek","extent":"derece, ölçü","external":"dış, harici","extra":"ekstra, fazladan","extraordinary":"olağanüstü","extreme":"aşırı, uç","extremely":"aşırı derecede","eye":"göz","face":"yüz; yüzleşmek","facility":"tesis, olanak","fact":"gerçek, olgu","factor":"faktör, etken","factory":"fabrika","fail":"başarısız olmak","failure":"başarısızlık","fair":"adil; fuar","fairly":"oldukça","faith":"inanç, güven","fall":"düşmek; sonbahar","false":"yanlış, sahte","familiar":"tanıdık, aşina","family":"aile","famous":"ünlü","fan":"hayran; vantilatör","fancy":"süslü, gösterişli","fantastic":"harika, fantastik","far":"uzak","farm":"çiftlik","farmer":"çiftçi","farming":"çiftçilik","fashion":"moda","fashionable":"moda, şık","fast":"hızlı","fasten":"bağlamak, tutturmak","fat":"şişman; yağ","father":"baba","fault":"hata, kusur","favor":"iyilik, lütuf","favorite":"favori, en sevilen","fear":"korku","feather":"tüy","feature":"özellik","federal":"federal","fee":"ücret","feed":"beslemek","feedback":"geri bildirim","feel":"hissetmek","feeling":"his, duygu","fellow":"arkadaş, kişi","female":"dişi, kadın","fence":"çit","festival":"festival","fever":"ateş (hastalık)","fiction":"kurgu, roman","field":"alan, tarla","fifteen":"on beş","fifth":"beşinci","fifty":"elli","fight":"kavga; dövüşmek","fighting":"dövüş, çatışma","figure":"rakam, şekil","file":"dosya","fill":"doldurmak","film":"film","final":"son, final","finally":"sonunda","finance":"finans","financial":"mali, finansal","find":"bulmak","finding":"bulgu","fine":"iyi, güzel; ceza","finger":"parmak","finish":"bitirmek","fire":"ateş, yangın; kovmak","firm":"firma; sağlam","first":"ilk, birinci","fish":"balık","fishing":"balık tutma","fit":"uygun, formda; sığmak","fitness":"fitness, form","five":"beş","fix":"tamir etmek, sabitlemek","fixed":"sabit","flag":"bayrak","flame":"alev","flash":"flaş, parıltı","flat":"düz; daire","flexible":"esnek","flight":"uçuş","float":"yüzmek, batmamak","flood":"sel","floor":"zemin, kat","flour":"un","flow":"akış; akmak","flower":"çiçek","flu":"grip","fly":"uçmak; sinek","flying":"uçan, uçma","focus":"odaklanmak; odak","fold":"katlamak","folding":"katlanır","folk":"halk","follow":"takip etmek","following":"aşağıdaki, takip eden","food":"yiyecek","foot":"ayak","football":"futbol","for":"için","force":"güç, kuvvet; zorlamak","foreign":"yabancı","forest":"orman","forever":"sonsuza dek","forget":"unutmak","forgive":"affetmek","fork":"çatal","form":"form, biçim","formal":"resmi","former":"eski, önceki","fortunately":"neyse ki","fortune":"servet; talih","forty":"kırk","forward":"ileri","found":"kurmak","four":"dört","fourteen":"on dört","fourth":"dördüncü","frame":"çerçeve","free":"özgür; ücretsiz","freedom":"özgürlük","freeze":"donmak, dondurmak","frequency":"sıklık, frekans","frequently":"sık sık","fresh":"taze","friend":"arkadaş","friendly":"arkadaş canlısı, dostça","friendship":"arkadaşlık","frighten":"korkutmak","frightened":"korkmuş","frightening":"korkutucu","frog":"kurbağa","from":"-den, -dan","front":"ön","frozen":"donmuş","fruit":"meyve","fry":"kızartmak","fuel":"yakıt","full":"dolu, tam","fully":"tamamen","fun":"eğlence","function":"işlev, fonksiyon","fund":"fon","fundamental":"temel","funding":"finansman, fon","funny":"komik","fur":"kürk","furniture":"mobilya","further":"daha ileri, daha fazla","furthermore":"ayrıca, dahası","future":"gelecek","gain":"kazanmak; kazanç","gallery":"galeri","game":"oyun","gang":"çete","gap":"boşluk, açık","garage":"garaj","garbage":"çöp","garden":"bahçe","gas":"gaz, benzin","gate":"kapı, geçit","gather":"toplamak, bir araya gelmek","general":"genel","generally":"genellikle","generate":"üretmek, oluşturmak","generation":"nesil, kuşak","generous":"cömert","genre":"tür","gentle":"nazik, yumuşak","gentleman":"beyefendi","geography":"coğrafya","get":"almak, edinmek","ghost":"hayalet","giant":"dev","gift":"hediye","girl":"kız","girlfriend":"kız arkadaş","give":"vermek","glad":"memnun, mutlu","glass":"cam, bardak","global":"küresel","glove":"eldiven","go":"gitmek","goal":"hedef, gol","god":"tanrı","gold":"altın","golf":"golf","good":"iyi","goods":"mal, eşya","govern":"yönetmek","government":"hükümet","governor":"vali","grab":"kapmak, yakalamak","grade":"not, sınıf, derece","gradually":"yavaş yavaş, giderek","graduate":"mezun olmak; mezun","grain":"tahıl, tane","grand":"büyük, görkemli","grandfather":"büyükbaba","grandmother":"büyükanne","grandparent":"büyükanne/büyükbaba","grant":"vermek, bağışlamak; hibe","grass":"çimen, ot","grateful":"minnettar","gray":"gri","great":"harika, büyük","green":"yeşil","greet":"selamlamak","grocery":"bakkal, market","ground":"yer, zemin","group":"grup","grow":"büyümek, yetiştirmek","growth":"büyüme","guarantee":"garanti","guard":"korumak; koruma, nöbetçi","guess":"tahmin etmek","guest":"misafir, konuk","guide":"rehber","guilty":"suçlu","guitar":"gitar","gun":"silah, tabanca","guy":"adam, herif","gym":"spor salonu","habit":"alışkanlık","hair":"saç","half":"yarım","hall":"salon, koridor","hand":"el","handle":"halletmek, tutmak; sap","hang":"asmak","happen":"olmak, meydana gelmek","happily":"mutlulukla","happiness":"mutluluk","happy":"mutlu","hard":"sert, zor","hardly":"neredeyse hiç","harm":"zarar","harmful":"zararlı","hat":"şapka","hate":"nefret etmek","have":"sahip olmak","he":"o (erkek)","head":"baş, kafa","headache":"baş ağrısı","headline":"manşet, başlık","health":"sağlık","healthy":"sağlıklı","hear":"duymak","hearing":"duyma; duruşma","heart":"kalp","heat":"ısı, sıcaklık","heating":"ısıtma","heaven":"cennet","heavily":"ağır bir şekilde, yoğun","heavy":"ağır","heel":"topuk","height":"yükseklik, boy","helicopter":"helikopter","hell":"cehennem","help":"yardım; yardım etmek","helpful":"yardımcı, faydalı","here":"burada","hero":"kahraman","hers":"onunki (kadın)","herself":"kendisi (kadın)","hey":"hey","hi":"selam","hide":"saklamak, gizlemek","high":"yüksek","highlight":"vurgulamak; öne çıkan nokta","highly":"oldukça, çok","highway":"otoyol","hill":"tepe","him":"onu (erkek)","himself":"kendisi (erkek)","hire":"işe almak, kiralamak","his":"onun (erkek)","historic":"tarihi","historical":"tarihsel","history":"tarih","hit":"vurmak","hobby":"hobi","hockey":"hokey","hold":"tutmak","hole":"delik","holiday":"tatil","hollow":"içi boş","holy":"kutsal","home":"ev, yuva","homework":"ev ödevi","honest":"dürüst","honor":"onur, şeref","hope":"umut; ummak","horrible":"korkunç","horror":"korku, dehşet","horse":"at","hospital":"hastane","host":"ev sahibi, sunucu","hot":"sıcak","hotel":"otel","hour":"saat","house":"ev","household":"hane, ev halkı","housing":"konut","how":"nasıl","however":"ancak, yine de","huge":"kocaman, devasa","human":"insan","humor":"mizah, espri","humorous":"komik, esprili","hundred":"yüz (sayı)","hungry":"aç","hunt":"avlamak","hunting":"avcılık","hurricane":"kasırga","hurry":"acele etmek","hurt":"incitmek, acımak","husband":"koca, eş","ice":"buz","idea":"fikir","ideal":"ideal","identify":"tanımlamak, teşhis etmek","identity":"kimlik","if":"eğer","ignore":"görmezden gelmek","ill":"hasta","illegal":"yasadışı","illness":"hastalık","illustrate":"göstermek, örneklemek","illustration":"çizim, örnek","image":"görüntü, imaj","imaginary":"hayali","imagination":"hayal gücü","imagine":"hayal etmek","immediate":"anında, acil","immediately":"hemen","immigrant":"göçmen","impact":"etki","impatient":"sabırsız","imply":"ima etmek","import":"ithalat; ithal etmek","importance":"önem","important":"önemli","impose":"dayatmak, uygulamak","impossible":"imkansız","impress":"etkilemek","impressed":"etkilenmiş","impression":"izlenim","impressive":"etkileyici","improve":"geliştirmek, iyileştirmek","improvement":"gelişme, iyileşme","in":"içinde","inch":"inç","incident":"olay","include":"içermek, dahil etmek","included":"dahil","including":"dahil olmak üzere","income":"gelir","increase":"artmak, artırmak","increasingly":"giderek artan şekilde","incredible":"inanılmaz","incredibly":"inanılmaz derecede","indeed":"gerçekten, aslında","independent":"bağımsız","indicate":"belirtmek, göstermek","indirect":"dolaylı","individual":"birey; bireysel","indoor":"iç mekan","indoors":"içeride","industrial":"endüstriyel, sanayi","industry":"sanayi, endüstri","infection":"enfeksiyon","influence":"etki","inform":"bilgilendirmek","informal":"gayri resmi","information":"bilgi","ingredient":"malzeme, içerik","initial":"başlangıç, ilk","initially":"başlangıçta","initiative":"girişim, inisiyatif","injure":"yaralamak","injured":"yaralı","injury":"yaralanma","inner":"iç","innocent":"masum","inquiry":"soruşturma, sorgu","insect":"böcek","inside":"içeride, içinde","insight":"içgörü, kavrayış","insist":"ısrar etmek","install":"kurmak, yüklemek","instance":"örnek, durum","instead":"yerine","institute":"enstitü","institution":"kurum","instruction":"talimat","instructor":"eğitmen","instrument":"enstrüman, alet","insurance":"sigorta","intelligence":"zeka","intelligent":"zeki, akıllı","intend":"niyet etmek","intended":"amaçlanan","intense":"yoğun","intention":"niyet","interest":"ilgi, faiz","interested":"ilgili, meraklı","interesting":"ilginç","internal":"iç, dahili","international":"uluslararası","internet":"internet","interpret":"yorumlamak, tercüme etmek","interrupt":"sözünü kesmek, ara vermek","interview":"görüşme, mülakat","into":"içine","introduce":"tanıtmak, tanıştırmak","introduction":"giriş, tanıtım","invent":"icat etmek","invention":"icat","invest":"yatırım yapmak","investigate":"araştırmak, soruşturmak","investigation":"soruşturma, araştırma","investment":"yatırım","invitation":"davet, davetiye","invite":"davet etmek","involve":"içermek, dahil etmek","involved":"dahil, ilgili","iron":"demir; ütü","island":"ada","issue":"konu, sorun; çıkarmak","it":"o (nesne)","item":"öğe, madde","its":"onun","itself":"kendisi","jacket":"ceket, mont","jam":"reçel; sıkışıklık","jazz":"caz","jeans":"kot pantolon","jewelry":"mücevher","job":"iş","join":"katılmak, birleştirmek","joke":"şaka","journal":"dergi, günlük","journalist":"gazeteci","journey":"yolculuk","joy":"neşe, sevinç","judge":"yargıç; yargılamak","judgment":"yargı, karar","juice":"meyve suyu","jump":"zıplamak, atlamak","junior":"genç, ast","just":"sadece, henüz","justice":"adalet","justify":"haklı çıkarmak","keep":"tutmak, saklamak","key":"anahtar","keyboard":"klavye","kick":"tekmelemek","kid":"çocuk","kill":"öldürmek","killing":"öldürme, cinayet","kilometer":"kilometre","king":"kral","kiss":"öpmek; öpücük","kitchen":"mutfak","knee":"diz","knife":"bıçak","knock":"vurmak, çalmak (kapı)","know":"bilmek","knowledge":"bilgi","lab":"laboratuvar","label":"etiket","labor":"emek, işçilik","laboratory":"laboratuvar","lack":"eksiklik, yokluk","lady":"hanım, bayan","lake":"göl","lamp":"lamba","land":"kara, arazi; iniş yapmak","landscape":"manzara, peyzaj","language":"dil","laptop":"dizüstü bilgisayar","large":"büyük, geniş","largely":"büyük ölçüde","late":"geç","later":"daha sonra","latest":"en son","laugh":"gülmek","laughter":"kahkaha, gülüş","launch":"başlatmak, piyasaya sürmek","law":"kanun, hukuk","lawyer":"avukat","lay":"yatırmak, koymak","layer":"katman, tabaka","lazy":"tembel","lead":"öncülük etmek, yönetmek; kurşun","leader":"lider","leadership":"liderlik","leading":"önde gelen","leaf":"yaprak","league":"lig","lean":"yaslanmak, eğilmek","learn":"öğrenmek","learning":"öğrenme","least":"en az","leather":"deri","leave":"ayrılmak, bırakmak","lecture":"ders, konferans","left":"sol","leg":"bacak","legal":"yasal, hukuki","leisure":"boş zaman","lemon":"limon","lend":"ödünç vermek","length":"uzunluk","less":"daha az","lesson":"ders","let":"izin vermek","letter":"mektup; harf","level":"seviye, düzey","library":"kütüphane","license":"lisans, ehliyet","lie":"yalan söylemek; uzanmak","life":"hayat, yaşam","lifestyle":"yaşam tarzı","lift":"kaldırmak","likely":"muhtemel","limit":"sınır","limited":"sınırlı","line":"çizgi, hat","link":"bağlantı","lion":"aslan","lip":"dudak","liquid":"sıvı","list":"liste","listen":"dinlemek","listener":"dinleyici","literature":"edebiyat","little":"küçük, az","live":"yaşamak; canlı","lively":"canlı, hareketli","living":"yaşayan; geçim","load":"yük; yüklemek","loan":"kredi, borç","local":"yerel","locate":"yerini bulmak, konumlandırmak","located":"konumlanmış, bulunan","location":"konum, yer","lock":"kilitlemek; kilit","logical":"mantıklı","lonely":"yalnız","long":"uzun","long-term":"uzun vadeli","look":"bakmak","loose":"gevşek, bol","lord":"lord, efendi","lose":"kaybetmek","loss":"kayıp","lost":"kayıp, kaybolmuş","lot":"çok, bir sürü","loud":"yüksek sesli","loudly":"yüksek sesle","love":"aşk, sevgi; sevmek","low":"alçak, düşük","lower":"alçaltmak, düşürmek","luck":"şans","lucky":"şanslı","lunch":"öğle yemeği","lung":"akciğer","luxury":"lüks","machine":"makine","mad":"deli, kızgın","magazine":"dergi","magic":"sihir, büyü","mail":"posta","main":"ana, temel","mainly":"başlıca, çoğunlukla","maintain":"sürdürmek, bakımını yapmak","major":"büyük, önemli","majority":"çoğunluk","make":"yapmak","male":"erkek","mall":"alışveriş merkezi","man":"adam, erkek","manage":"yönetmek, başarmak","management":"yönetim","manager":"yönetici, müdür","manner":"tarz, davranış","many":"çok, birçok","map":"harita","mark":"işaret; işaretlemek","market":"pazar, piyasa","marketing":"pazarlama","marriage":"evlilik","married":"evli","marry":"evlenmek","mass":"kütle; kitle","massive":"çok büyük, devasa","master":"usta, efendi; ustalaşmak","matching":"uyumlu, eşleşen","material":"malzeme, materyal","math":"matematik","mathematics":"matematik","matter":"mesele, madde; önemli olmak","maximum":"maksimum, en fazla","may":"-ebilir","maybe":"belki","mayor":"belediye başkanı","me":"beni, bana","meal":"öğün, yemek","mean":"anlamına gelmek; cimri","meaning":"anlam","means":"araç, yol","meanwhile":"bu arada","measure":"ölçmek; ölçü","measurement":"ölçüm","meat":"et","media":"medya","medical":"tıbbi","medicine":"ilaç, tıp","medium":"orta","meet":"tanışmak, buluşmak","meeting":"toplantı","melt":"erimek, eritmek","member":"üye","memory":"hafıza, anı","mental":"zihinsel","mention":"bahsetmek","menu":"menü","mess":"karışıklık, dağınıklık","message":"mesaj","metal":"metal","meter":"metre","method":"yöntem","middle":"orta","midnight":"gece yarısı","might":"-ebilir; güç","mild":"ılıman, hafif","mile":"mil","military":"askeri","milk":"süt","million":"milyon","mind":"akıl, zihin","mineral":"mineral","minimum":"minimum, en az","minister":"bakan","minor":"küçük, önemsiz","minority":"azınlık","minute":"dakika","mirror":"ayna","miss":"kaçırmak, özlemek","missing":"kayıp, eksik","mission":"görev, misyon","mistake":"hata","mix":"karıştırmak","mixed":"karışık","mixture":"karışım","model":"model","modern":"modern","modify":"değiştirmek, düzenlemek","mom":"anne","moment":"an","money":"para","monitor":"izlemek; ekran","monkey":"maymun","month":"ay (takvim)","mood":"ruh hali, mod","moon":"ay (gökyüzü)","moral":"ahlaki","more":"daha fazla","morning":"sabah","most":"en çok, çoğu","mostly":"çoğunlukla","mother":"anne","motor":"motor","motorcycle":"motosiklet","mount":"binmek, monte etmek","mountain":"dağ","mouse":"fare","mouth":"ağız","move":"hareket etmek, taşımak","movement":"hareket","movie":"film","much":"çok","mud":"çamur","multiple":"birden fazla, çoklu","multiply":"çarpmak","murder":"cinayet","muscle":"kas","museum":"müze","music":"müzik","musical":"müzikal","musician":"müzisyen","must":"-meli, -malı","my":"benim","myself":"kendim","mysterious":"gizemli","mystery":"gizem, esrar","nail":"tırnak; çivi","name":"isim, ad","narrative":"anlatı, öykü","narrow":"dar","nation":"ulus","national":"ulusal","native":"yerli, ana (dil)","natural":"doğal","naturally":"doğal olarak","nature":"doğa","near":"yakın","nearly":"neredeyse","neat":"düzenli, temiz","necessarily":"zorunlu olarak, ille de","necessary":"gerekli","neck":"boyun","need":"ihtiyaç duymak","needle":"iğne","negative":"olumsuz, negatif","neighbor":"komşu","neighborhood":"mahalle, semt","neither":"hiçbiri, ne de","nerve":"sinir","nervous":"gergin, sinirli","net":"ağ, file","network":"ağ, şebeke","never":"asla, hiçbir zaman","nevertheless":"yine de, buna rağmen","new":"yeni","news":"haber","newspaper":"gazete","next":"sonraki, gelecek","nice":"hoş, güzel","night":"gece","nightmare":"kabus","nine":"dokuz","nineteen":"on dokuz","ninety":"doksan","no":"hayır","nobody":"hiç kimse","noise":"gürültü, ses","noisy":"gürültülü","none":"hiçbiri","normal":"normal","normally":"normalde","north":"kuzey","northern":"kuzey (yönü)","nose":"burun","not":"değil","note":"not","nothing":"hiçbir şey","notice":"fark etmek; bildirim","notion":"kavram, fikir","novel":"roman","now":"şimdi","nowhere":"hiçbir yer","nuclear":"nükleer","number":"sayı, numara","numerous":"çok sayıda","nurse":"hemşire","nut":"fındık, kuruyemiş","obey":"itaat etmek","object":"nesne; itiraz etmek","objective":"amaç, hedef; nesnel","obligation":"yükümlülük, zorunluluk","observation":"gözlem","observe":"gözlemlemek","obtain":"elde etmek","obvious":"açık, belli","obviously":"açıkça, belli ki","occasion":"durum, vesile","occasionally":"ara sıra","occur":"meydana gelmek, olmak","ocean":"okyanus","odd":"tuhaf; tek (sayı)","of":"-in, -ın","off":"kapalı; -den uzağa","offend":"gücendirmek, rahatsız etmek","offense":"suç, hakaret","offensive":"saldırgan, rahatsız edici","offer":"teklif etmek; teklif","office":"ofis, büro","officer":"memur, subay","official":"resmi; yetkili","often":"sık sık","oh":"ah, oh","oil":"yağ, petrol","old":"yaşlı, eski","old-fashioned":"eski moda","on":"üzerinde, açık","once":"bir kez, bir zamanlar","onion":"soğan","online":"çevrimiçi","only":"sadece, tek","onto":"üzerine","open":"açık; açmak","opening":"açılış, açıklık","operate":"çalıştırmak, ameliyat etmek","operation":"operasyon, ameliyat","opinion":"görüş, fikir","opponent":"rakip","opportunity":"fırsat","oppose":"karşı çıkmak","opposed":"karşı","opposite":"karşı, zıt","opposition":"muhalefet, karşıtlık","option":"seçenek","or":"veya, ya da","orange":"portakal; turuncu","order":"sipariş, düzen; emretmek","ordinary":"sıradan, olağan","organ":"organ","organization":"organizasyon, örgüt","organize":"düzenlemek, organize etmek","organized":"düzenli, organize","organizer":"düzenleyici, organizatör","origin":"köken, kaynak","original":"orijinal, özgün","originally":"başlangıçta, aslında","otherwise":"aksi takdirde","ought":"-meli, -malı","our":"bizim","ours":"bizimki","ourselves":"kendimiz","outcome":"sonuç","outdoor":"açık hava","outdoors":"açık havada","outer":"dış","outline":"taslak, ana hat","outside":"dışarıda, dışında","oven":"fırın","over":"üzerinde, bitmiş","overall":"genel olarak","overseas":"denizaşırı, yurt dışı","owe":"borçlu olmak","owner":"sahip","pace":"hız, tempo","pack":"paketlemek; paket","package":"paket","page":"sayfa","pain":"acı, ağrı","painful":"acı verici, ağrılı","paint":"boya; boyamak","painter":"ressam, boyacı","painting":"resim, tablo","pair":"çift","palace":"saray","pale":"solgun, soluk","pan":"tava","panel":"panel","pants":"pantolon","paper":"kağıt","paragraph":"paragraf","parent":"ebeveyn","park":"park; park etmek","parking":"park etme, otopark","part":"parça, bölüm","participant":"katılımcı","participate":"katılmak","particular":"belirli, özel","particularly":"özellikle","partly":"kısmen","partner":"ortak, eş","party":"parti","pass":"geçmek","passage":"pasaj, geçit","passenger":"yolcu","passion":"tutku","passport":"pasaport","past":"geçmiş","path":"yol, patika","patient":"hasta; sabırlı","pattern":"desen, örüntü","pay":"ödemek","payment":"ödeme","peace":"barış","peaceful":"huzurlu, barışçıl","pen":"kalem","pencil":"kurşun kalem","penny":"kuruş, peni","people":"insanlar","pepper":"biber","per":"başına","percent":"yüzde","percentage":"yüzde oranı","perfect":"mükemmel","perfectly":"mükemmel şekilde","perform":"gerçekleştirmek, sahnelemek","performance":"performans, gösteri","perhaps":"belki","period":"dönem, süre","permanent":"kalıcı","permission":"izin","permit":"izin vermek","person":"kişi","personal":"kişisel","personality":"kişilik","personally":"kişisel olarak","perspective":"bakış açısı","persuade":"ikna etmek","pet":"evcil hayvan","phase":"aşama, evre","phenomenon":"olgu, fenomen","philosophy":"felsefe","phone":"telefon","photo":"fotoğraf","photograph":"fotoğraf","photographer":"fotoğrafçı","photography":"fotoğrafçılık","phrase":"ifade, deyim","physical":"fiziksel","physics":"fizik","piano":"piyano","pick":"seçmek, toplamak","picture":"resim, fotoğraf","piece":"parça","pig":"domuz","pile":"yığın","pilot":"pilot","pin":"iğne, toplu iğne","pink":"pembe","pipe":"boru","pitch":"saha; ton","place":"yer","plain":"sade, düz; ova","plan":"plan","plane":"uçak","planet":"gezegen","planning":"planlama","plant":"bitki; ekmek","plastic":"plastik","plate":"tabak","platform":"platform, peron","play":"oynamak; oyun","player":"oyuncu","pleasant":"hoş, keyifli","please":"lütfen; memnun etmek","pleased":"memnun","pleasure":"zevk, keyif","plenty":"bol, çok","plot":"olay örgüsü; komplo","plus":"artı","pocket":"cep","poem":"şiir","poet":"şair","poetry":"şiir (sanatı)","point":"nokta, puan; işaret etmek","pointed":"sivri, keskin","poison":"zehir","poisonous":"zehirli","police":"polis","policeman":"polis memuru","policy":"politika, poliçe","polite":"kibar, nazik","political":"politik, siyasi","politician":"politikacı","politics":"siyaset","pollution":"kirlilik","pool":"havuz","poor":"fakir, zavallı","pop":"pop","popular":"popüler","popularity":"popülerlik","population":"nüfus","port":"liman","portrait":"portre","pose":"poz vermek; oluşturmak","position":"pozisyon, konum","positive":"olumlu, pozitif","possess":"sahip olmak","possession":"sahiplik, mülk","possibility":"olasılık, imkan","possible":"mümkün","possibly":"muhtemelen, belki","post":"posta; gönderi","poster":"poster, afiş","pot":"tencere, kap","potato":"patates","potential":"potansiyel","pound":"pound, sterlin","pour":"dökmek","poverty":"yoksulluk","powder":"toz, pudra","power":"güç, iktidar","powerful":"güçlü","practical":"pratik","practice":"pratik, alıştırma","praise":"övgü; övmek","pray":"dua etmek","prayer":"dua","predict":"tahmin etmek, öngörmek","prediction":"tahmin, öngörü","prefer":"tercih etmek","pregnant":"hamile","preparation":"hazırlık","prepare":"hazırlamak","prepared":"hazır, hazırlanmış","presence":"varlık, mevcudiyet","present":"şimdiki; hediye; sunmak","presentation":"sunum","preserve":"korumak, saklamak","president":"başkan, cumhurbaşkanı","press":"basmak; basın","pressure":"basınç, baskı","pretend":"-miş gibi yapmak","pretty":"güzel; oldukça","prevent":"önlemek","previous":"önceki","previously":"daha önce","price":"fiyat","priest":"rahip","primary":"birincil, temel","prime":"başlıca, birinci","prince":"prens","princess":"prenses","principal":"müdür; başlıca","principle":"ilke, prensip","print":"yazdırmak, basmak","printer":"yazıcı","printing":"baskı","priority":"öncelik","prison":"hapishane","prisoner":"mahkum, tutuklu","privacy":"gizlilik, mahremiyet","private":"özel","prize":"ödül","probably":"muhtemelen","problem":"sorun, problem","procedure":"prosedür, işlem","process":"süreç, işlem","produce":"üretmek","producer":"yapımcı, üretici","product":"ürün","production":"üretim, yapım","profession":"meslek","professional":"profesyonel","professor":"profesör","profile":"profil","profit":"kar, kazanç","program":"program","progress":"ilerleme","project":"proje","promise":"söz vermek; söz","promote":"terfi ettirmek, tanıtmak","pronounce":"telaffuz etmek","proof":"kanıt","proper":"uygun, doğru","properly":"düzgün şekilde","property":"mülk, özellik","proposal":"teklif, öneri","propose":"önermek, teklif etmek","prospect":"olasılık, beklenti","protect":"korumak","protection":"koruma","protest":"protesto","proud":"gururlu","prove":"kanıtlamak","provide":"sağlamak","psychologist":"psikolog","psychology":"psikoloji","public":"halk; kamu, genel","publication":"yayın","publish":"yayınlamak","pull":"çekmek","punish":"cezalandırmak","punishment":"ceza","pure":"saf","purchase":"satın almak; satın alma","purple":"mor","purpose":"amaç","pursue":"peşinden gitmek, sürdürmek","push":"itmek","put":"koymak","qualification":"nitelik, yeterlilik","qualified":"nitelikli, yeterli","qualify":"hak kazanmak, nitelendirmek","quality":"kalite","quantity":"miktar","quarter":"çeyrek","queen":"kraliçe","question":"soru","quick":"hızlı","quickly":"hızlıca","quiet":"sessiz, sakin","quietly":"sessizce","quit":"bırakmak, ayrılmak","quite":"oldukça","quotation":"alıntı","quote":"alıntı yapmak","racing":"yarış","radio":"radyo","railroad":"demiryolu","rain":"yağmur","raise":"yükseltmek, yetiştirmek","range":"aralık, menzil","rank":"sıra, rütbe","rapid":"hızlı","rapidly":"hızla","rare":"nadir","rarely":"nadiren","rate":"oran, hız","rather":"oldukça, daha ziyade","raw":"çiğ, ham","reach":"ulaşmak","react":"tepki vermek","reaction":"tepki, reaksiyon","read":"okumak","reader":"okuyucu","reading":"okuma","ready":"hazır","real":"gerçek","realistic":"gerçekçi","reality":"gerçeklik","realize":"fark etmek, gerçekleştirmek","really":"gerçekten","reason":"neden, sebep","reasonable":"makul","recall":"hatırlamak, geri çağırmak","receipt":"fiş, makbuz","receive":"almak","recent":"son, yakın zamandaki","recently":"son zamanlarda","reception":"resepsiyon, karşılama","recipe":"tarif","recognize":"tanımak","recommend":"tavsiye etmek","recommendation":"tavsiye","record":"kayıt; kaydetmek","recording":"kayıt","recover":"iyileşmek, geri kazanmak","recycle":"geri dönüştürmek","red":"kırmızı","reduce":"azaltmak","reduction":"azalma, indirim","refer":"atıfta bulunmak, başvurmak","reference":"referans, kaynak","reflect":"yansıtmak, düşünmek","refrigerator":"buzdolabı","refuse":"reddetmek","regard":"saygı; -e bakmak","region":"bölge","regional":"bölgesel","register":"kaydolmak; kayıt","regret":"pişman olmak","regular":"düzenli","regularly":"düzenli olarak","regulation":"düzenleme, kural","reject":"reddetmek","relate":"ilişkilendirmek","related":"ilgili, akraba","relation":"ilişki","relationship":"ilişki","relative":"akraba; göreceli","relatively":"nispeten","relax":"rahatlamak","relaxed":"rahat","relaxing":"rahatlatıcı","release":"serbest bırakmak, yayınlamak","relevant":"ilgili, alakalı","reliable":"güvenilir","relief":"rahatlama, ferahlama","religion":"din","religious":"dini","rely":"güvenmek, bel bağlamak","remain":"kalmak","remark":"söz, yorum","remember":"hatırlamak","remind":"hatırlatmak","remote":"uzak","remove":"kaldırmak, çıkarmak","rent":"kira; kiralamak","repair":"tamir etmek","repeat":"tekrarlamak","repeated":"tekrarlanan","replace":"değiştirmek, yerine koymak","reply":"cevap; cevap vermek","report":"rapor","reporter":"muhabir","represent":"temsil etmek","representative":"temsilci","reputation":"itibar, ün","request":"istek; rica etmek","require":"gerektirmek","requirement":"gereksinim","rescue":"kurtarmak","research":"araştırma","researcher":"araştırmacı","reservation":"rezervasyon","reserve":"ayırmak, rezerve etmek","resident":"sakin, oturan","resist":"direnmek, karşı koymak","resolve":"çözmek","resort":"tatil beldesi; başvurmak","resource":"kaynak","respect":"saygı; saygı duymak","respond":"cevap vermek","response":"cevap, yanıt","responsibility":"sorumluluk","responsible":"sorumlu","restaurant":"restoran","result":"sonuç","retain":"korumak, elde tutmak","retire":"emekli olmak","retired":"emekli","return":"geri dönmek; iade","reveal":"açığa çıkarmak, ortaya koymak","revolution":"devrim","reward":"ödül","rhythm":"ritim","rice":"pirinç, pilav","rich":"zengin","rid":"kurtulmak","ride":"binmek, sürmek","right":"doğru; sağ; hak","ring":"yüzük; çalmak (zil)","rise":"yükselmek","risk":"risk","river":"nehir, ırmak","road":"yol","robot":"robot","role":"rol","roll":"yuvarlamak; rulo","romantic":"romantik","roof":"çatı","room":"oda","root":"kök","rope":"ip, halat","rough":"pürüzlü, kaba","round":"yuvarlak; tur","route":"rota, güzergah","routine":"rutin","row":"sıra, dizi","royal":"kraliyet, asil","rub":"ovmak, sürtmek","rubber":"lastik, kauçuk","rude":"kaba","rule":"kural; yönetmek","run":"koşmak","runner":"koşucu","running":"koşma","rural":"kırsal","rush":"acele etmek","sad":"üzgün","sadly":"ne yazık ki, üzülerek","safe":"güvenli; kasa","safety":"güvenlik","sail":"yelken açmak, denize açılmak","sailing":"yelkencilik","sailor":"denizci","salad":"salata","salary":"maaş","sale":"satış, indirim","salt":"tuz","same":"aynı","sample":"örnek, numune","sand":"kum","sandwich":"sandviç","satellite":"uydu","satisfied":"memnun, tatmin olmuş","satisfy":"tatmin etmek, memnun etmek","sauce":"sos","save":"kurtarmak, biriktirmek","saving":"tasarruf","say":"söylemek","scale":"ölçek; terazi","scan":"taramak","scared":"korkmuş","scary":"korkutucu","scene":"sahne, manzara","schedule":"program, çizelge","school":"okul","science":"bilim","scientific":"bilimsel","scientist":"bilim insanı","score":"skor, puan; puan almak","scream":"çığlık atmak","screen":"ekran","script":"senaryo, metin","sculpture":"heykel","sea":"deniz","search":"aramak; arama","season":"mevsim, sezon","seat":"koltuk, oturak","secondary":"ikincil","secret":"sır; gizli","secretary":"sekreter","section":"bölüm, kısım","sector":"sektör","secure":"güvenli; güvence altına almak","security":"güvenlik","see":"görmek","seed":"tohum","seek":"aramak, peşinde olmak","seem":"görünmek","select":"seçmek","selection":"seçim","self":"benlik, kendi","sell":"satmak","senate":"senato","senator":"senatör","send":"göndermek","senior":"kıdemli, yaşça büyük","sense":"duyu, anlam; hissetmek","sensible":"mantıklı, makul","sensitive":"hassas, duyarlı","sentence":"cümle","separate":"ayrı; ayırmak","sequence":"sıra, dizi","series":"dizi, seri","serious":"ciddi","seriously":"ciddi bir şekilde","servant":"hizmetçi","serve":"hizmet etmek, servis yapmak","service":"hizmet, servis","session":"oturum, seans","setting":"ortam, ayar","settle":"yerleşmek, çözmek","seven":"yedi","seventeen":"on yedi","seventy":"yetmiş","several":"birkaç","severe":"şiddetli, ağır","sex":"cinsiyet","sexual":"cinsel","shade":"gölge, ton","shadow":"gölge","shake":"sallamak","shall":"-ecek, -acak","shallow":"sığ","shame":"utanç","shape":"şekil, biçim","share":"paylaşmak; hisse","sharp":"keskin","she":"o (kadın)","sheep":"koyun","sheet":"çarşaf, tabaka","shelf":"raf","shell":"kabuk","shelter":"barınak, sığınak","shift":"vardiya; kaydırmak","shine":"parlamak","shiny":"parlak","ship":"gemi","shirt":"gömlek","shock":"şok","shocked":"şok olmuş","shoe":"ayakkabı","shoot":"ateş etmek, vurmak","shooting":"ateş etme, çekim","shop":"dükkan, mağaza","shopping":"alışveriş","short":"kısa","shot":"atış","should":"-meli, -malı","shoulder":"omuz","shout":"bağırmak","show":"göstermek; gösteri","shower":"duş","shut":"kapatmak","shy":"utangaç","sick":"hasta","side":"taraf, yan","sight":"görüş, manzara","sign":"işaret; imzalamak","signal":"sinyal","significant":"önemli, kayda değer","significantly":"önemli ölçüde","silence":"sessizlik","silent":"sessiz","silk":"ipek","silly":"aptalca, saçma","silver":"gümüş","similar":"benzer","similarity":"benzerlik","similarly":"benzer şekilde","simple":"basit","simply":"basitçe, sadece","since":"-den beri; çünkü","sincere":"samimi, içten","sing":"şarkı söylemek","singer":"şarkıcı","singing":"şarkı söyleme","single":"tek; bekar","sink":"batmak; lavabo","sir":"efendim, bay","sister":"kız kardeş","sit":"oturmak","site":"site, alan","situation":"durum","six":"altı","sixteen":"on altı","sixty":"altmış","size":"boyut, beden","ski":"kayak yapmak","skiing":"kayak","skill":"beceri, yetenek","skin":"cilt, deri","skirt":"etek","sky":"gökyüzü","slave":"köle","sleep":"uyumak","slice":"dilim","slide":"kaymak; slayt","slight":"hafif, az","slightly":"biraz, hafifçe","slip":"kaymak","slope":"eğim, yamaç","slow":"yavaş","slowly":"yavaşça","small":"küçük","smart":"akıllı, zeki","smartphone":"akıllı telefon","smell":"koku; koklamak","smile":"gülümsemek; gülümseme","smoke":"duman; sigara içmek","smoking":"sigara içme","smooth":"pürüzsüz, düzgün","snake":"yılan","sneaker":"spor ayakkabı","snow":"kar","so":"böylece, çok","soap":"sabun","soccer":"futbol","social":"sosyal","society":"toplum","sock":"çorap","soft":"yumuşak","software":"yazılım","soil":"toprak","solar":"güneş (enerjisi)","soldier":"asker","solid":"katı, sağlam","solution":"çözüm","solve":"çözmek","some":"bazı, biraz","somebody":"birisi","someone":"birisi","something":"bir şey","sometimes":"bazen","somewhat":"biraz, bir dereceye kadar","somewhere":"bir yerde","son":"oğul","song":"şarkı","soon":"yakında","sorry":"üzgün, özür dilerim","sort":"tür, çeşit; sıralamak","soul":"ruh","sound":"ses","soup":"çorba","source":"kaynak","south":"güney","southern":"güney (yönü)","space":"uzay, alan","speak":"konuşmak","speaker":"konuşmacı, hoparlör","special":"özel","specialist":"uzman","species":"tür","specific":"belirli, özel","specifically":"özellikle","speech":"konuşma","speed":"hız","spell":"hecelemek","spelling":"heceleme, imla","spend":"harcamak","spending":"harcama","spicy":"baharatlı, acılı","spider":"örümcek","spirit":"ruh, moral","spiritual":"ruhani, manevi","split":"bölmek, ayırmak","spoken":"sözlü, konuşulan","sponsor":"sponsor","spoon":"kaşık","sport":"spor","spot":"nokta, benek; fark etmek","spread":"yaymak, yayılmak","spring":"ilkbahar; yay","square":"kare; meydan","stable":"istikrarlı; ahır","stadium":"stadyum","staff":"personel, kadro","stage":"sahne; aşama","stair":"merdiven basamağı","stamp":"pul; damga","stand":"ayakta durmak","standard":"standart","star":"yıldız","stare":"gözünü dikmek, bakmak","start":"başlamak","state":"durum; devlet; belirtmek","statement":"ifade, açıklama","station":"istasyon","statistic":"istatistik","statue":"heykel","status":"statü, durum","stay":"kalmak","steady":"sabit, istikrarlı","steal":"çalmak","steel":"çelik","steep":"dik, sarp","step":"adım","sticky":"yapışkan","stiff":"sert, katı","still":"hâlâ; durgun","stock":"stok, hisse senedi","stomach":"mide, karın","stone":"taş","stop":"durmak, durdurmak","store":"mağaza; depolamak","storm":"fırtına","story":"hikaye","stove":"soba, ocak","straight":"düz, doğrudan","strange":"tuhaf, garip","stranger":"yabancı","strategy":"strateji","stream":"akarsu, dere","street":"sokak, cadde","strength":"güç, kuvvet","stress":"stres; vurgu","stretch":"germek, uzatmak","strict":"katı, sıkı","strike":"vurmak; grev","string":"ip, tel","strong":"güçlü","strongly":"güçlü bir şekilde","structure":"yapı","struggle":"mücadele etmek","student":"öğrenci","studio":"stüdyo","study":"çalışmak, ders çalışmak","stuff":"şey, eşya","stupid":"aptal","style":"stil, tarz","subject":"konu; ders","submit":"sunmak, teslim etmek","substance":"madde","subway":"metro","succeed":"başarmak","success":"başarı","successful":"başarılı","successfully":"başarıyla","such":"böyle, bu tür","sudden":"ani","suddenly":"aniden","suffer":"acı çekmek, katlanmak","sugar":"şeker","suggest":"önermek","suggestion":"öneri","suit":"takım elbise; uygun olmak","suitable":"uygun","sum":"toplam","summarize":"özetlemek","summary":"özet","summer":"yaz","sun":"güneş","supermarket":"süpermarket","supply":"tedarik etmek; arz","support":"desteklemek; destek","supporter":"destekçi, taraftar","suppose":"varsaymak, sanmak","sure":"emin","surely":"kesinlikle, elbette","surface":"yüzey","surgery":"ameliyat, cerrahi","surprise":"sürpriz; şaşırtmak","surprised":"şaşırmış","surprising":"şaşırtıcı","surround":"çevrelemek","surrounding":"çevredeki","survey":"anket, araştırma","survive":"hayatta kalmak","suspect":"şüphelenmek; şüpheli","swear":"yemin etmek, küfretmek","sweater":"kazak","sweep":"süpürmek","sweet":"tatlı","swim":"yüzmek","swimming":"yüzme","switch":"değiştirmek; anahtar (elektrik)","symbol":"sembol","sympathy":"sempati, acıma","symptom":"belirti, semptom","system":"sistem","table":"masa","tablet":"tablet","tail":"kuyruk","take":"almak","tale":"masal, hikaye","talent":"yetenek","talented":"yetenekli","talk":"konuşmak","tall":"uzun boylu","tank":"tank; depo","tape":"bant, teyp","target":"hedef","task":"görev","taste":"tat; tatmak","tax":"vergi","taxi":"taksi","tea":"çay","teach":"öğretmek","teacher":"öğretmen","teaching":"öğretme, öğretmenlik","team":"takım","tear":"gözyaşı; yırtmak","technical":"teknik","technique":"teknik, yöntem","technology":"teknoloji","teenage":"genç, ergen","teenager":"genç, ergen","telephone":"telefon","television":"televizyon","tell":"söylemek, anlatmak","temperature":"sıcaklık","temporary":"geçici","ten":"on","tend":"eğiliminde olmak","tennis":"tenis","tent":"çadır","term":"terim; dönem","terrible":"korkunç","test":"test, sınav","text":"metin","than":"-den (karşılaştırma)","thank":"teşekkür etmek","thanks":"teşekkürler","that":"o, şu, ki","the":"belirli tanımlık","theater":"tiyatro","their":"onların","theirs":"onlarınki","them":"onları","theme":"tema","themselves":"kendileri","then":"sonra, o zaman","theory":"teori","therapy":"terapi","there":"orada","therefore":"bu yüzden, dolayısıyla","they":"onlar","thick":"kalın","thief":"hırsız","thin":"ince, zayıf","thing":"şey","think":"düşünmek","thinking":"düşünme, düşünce","third":"üçüncü","thirsty":"susamış","thirteen":"on üç","thirty":"otuz","this":"bu","though":"-e rağmen, gerçi","thought":"düşünce","thousand":"bin","threat":"tehdit","threaten":"tehdit etmek","three":"üç","throat":"boğaz","through":"içinden, aracılığıyla","throw":"atmak, fırlatmak","thus":"böylece","ticket":"bilet","tie":"kravat; bağlamak","tight":"sıkı, dar","time":"zaman","tiny":"minik, çok küçük","tip":"ipucu; bahşiş","tire":"lastik; yormak","tired":"yorgun","title":"başlık, unvan","to":"-e, -a","today":"bugün","toe":"ayak parmağı","together":"birlikte","toilet":"tuvalet","tomato":"domates","tomorrow":"yarın","ton":"ton","tone":"ton","tongue":"dil (organ)","tonight":"bu gece","too":"de, çok","tool":"araç, alet","tooth":"diş","top":"üst, tepe","topic":"konu","total":"toplam","totally":"tamamen","touch":"dokunmak","tough":"zor, sert","tour":"tur, gezi","tourism":"turizm","tourist":"turist","toward":"-e doğru","towel":"havlu","tower":"kule","town":"kasaba, şehir","toy":"oyuncak","track":"iz, ray; takip etmek","trade":"ticaret","tradition":"gelenek","traditional":"geleneksel","traffic":"trafik","train":"tren; eğitmek","trainer":"antrenör, eğitmen","training":"eğitim, antrenman","transfer":"transfer, aktarım","transform":"dönüştürmek","transition":"geçiş","translate":"çevirmek, tercüme etmek","translation":"çeviri, tercüme","transport":"taşımak; ulaşım","transportation":"ulaşım","trash":"çöp","travel":"seyahat etmek","traveler":"gezgin, yolcu","treat":"davranmak, tedavi etmek","treatment":"tedavi, muamele","tree":"ağaç","trend":"eğilim, trend","trial":"deneme; duruşma","trick":"hile, numara","trip":"gezi, yolculuk","tropical":"tropikal","trouble":"sorun, dert","truck":"kamyon","true":"doğru, gerçek","truly":"gerçekten","trust":"güven; güvenmek","truth":"gerçek, hakikat","try":"denemek","tube":"tüp, boru","tune":"melodi, nağme","tunnel":"tünel","turn":"dönmek, çevirmek; sıra","twelve":"on iki","twenty":"yirmi","twice":"iki kez","twin":"ikiz","two":"iki","type":"tür, tip; yazmak","typical":"tipik","typically":"tipik olarak, genellikle","ugly":"çirkin","ultimately":"sonuçta, nihayetinde","umbrella":"şemsiye","unable":"yapamayan, aciz","uncle":"amca, dayı","uncomfortable":"rahatsız","unconscious":"bilinçsiz, baygın","under":"altında","underground":"yeraltı","understand":"anlamak","understanding":"anlayış","underwear":"iç çamaşırı","unemployed":"işsiz","unemployment":"işsizlik","unexpected":"beklenmedik","unfair":"haksız, adaletsiz","unfortunately":"ne yazık ki","unhappy":"mutsuz","uniform":"üniforma","union":"birlik, sendika","unique":"benzersiz, eşsiz","unit":"birim, ünite","united":"birleşik","universe":"evren","university":"üniversite","unknown":"bilinmeyen","unless":"-medikçe, olmazsa","unlike":"-in aksine","unlikely":"olası olmayan","unnecessary":"gereksiz","unpleasant":"nahoş, tatsız","unusual":"olağandışı, sıra dışı","up":"yukarı","update":"güncellemek; güncelleme","upon":"üzerine","upper":"üst","upset":"üzgün; üzmek","upstairs":"üst kat","upward":"yukarı doğru","urban":"kentsel","urge":"teşvik etmek, dürtmek","us":"bizi, bize","use":"kullanmak; kullanım","used":"kullanılmış; alışkın","useful":"faydalı","user":"kullanıcı","usual":"olağan, her zamanki","usually":"genellikle","vacation":"tatil","valley":"vadi","valuable":"değerli","value":"değer","van":"minibüs, kamyonet","variety":"çeşitlilik, çeşit","various":"çeşitli","vary":"değişmek, çeşitlilik göstermek","vast":"engin, geniş","vegetable":"sebze","vehicle":"araç, taşıt","venue":"mekan, yer","version":"versiyon, sürüm","very":"çok","via":"aracılığıyla, üzerinden","victim":"kurban, mağdur","victory":"zafer","video":"video","view":"görüş, manzara","viewer":"izleyici","village":"köy","violence":"şiddet","violent":"şiddetli, şiddet içeren","virtual":"sanal","virus":"virüs","vision":"görüş, vizyon","visit":"ziyaret etmek","visitor":"ziyaretçi","visual":"görsel","vital":"hayati, çok önemli","vitamin":"vitamin","voice":"ses","volume":"ses düzeyi; hacim, cilt","volunteer":"gönüllü","vote":"oy; oy vermek","wage":"ücret, maaş","wait":"beklemek","waiter":"garson","wake":"uyanmak","walk":"yürümek","wall":"duvar","want":"istemek","war":"savaş","warm":"ılık, sıcak","warn":"uyarmak","warning":"uyarı","wash":"yıkamak","washing":"yıkama, çamaşır","waste":"israf, atık; boşa harcamak","watch":"izlemek; kol saati","water":"su","wave":"dalga; el sallamak","way":"yol, tarz","we":"biz","weak":"zayıf","weakness":"zayıflık, zaaf","wealth":"zenginlik, servet","wealthy":"zengin, varlıklı","weapon":"silah","wear":"giymek","weather":"hava durumu","web":"ağ, internet","website":"web sitesi","wedding":"düğün","week":"hafta","weekend":"hafta sonu","weigh":"tartmak, ağırlığında olmak","weight":"ağırlık, kilo","welcome":"hoş geldiniz; karşılamak","well":"iyi; kuyu","west":"batı","western":"batı (yönü)","wet":"ıslak","whatever":"her ne, ne olursa","wheel":"tekerlek","when":"ne zaman","whenever":"ne zaman olursa","where":"nerede","whereas":"oysa, halbuki","wherever":"nerede olursa","whether":"olup olmadığı, -ip -mediği","while":"iken; süre","whisper":"fısıldamak","white":"beyaz","who":"kim","whole":"bütün, tüm","whom":"kimi, kime","whose":"kimin","why":"neden","wide":"geniş","widely":"geniş çapta, yaygın olarak","wife":"eş, karı","wild":"vahşi, yabani","wildlife":"yaban hayatı","will":"-ecek; irade","willing":"istekli, gönüllü","win":"kazanmak","wind":"rüzgar; sarmak","window":"pencere","wine":"şarap","wing":"kanat","winner":"kazanan","winter":"kış","wire":"tel, kablo","wise":"bilge, akıllı","wish":"dilemek; dilek","with":"ile","within":"içinde, dahilinde","without":"-sız, -meden","witness":"tanık, şahit","woman":"kadın","wonder":"merak etmek; harika","wonderful":"harika, muhteşem","wood":"odun, ahşap","wooden":"ahşap","wool":"yün","word":"kelime, söz","work":"çalışmak; iş","worker":"işçi, çalışan","working":"çalışan, işleyen","world":"dünya","worldwide":"dünya çapında","worried":"endişeli","worry":"endişelenmek","worse":"daha kötü","worst":"en kötü","worth":"değer, değerinde","would":"-ecekti, -erdi","wound":"yara","wow":"vay be, harika","wrap":"sarmak, paketlemek","write":"yazmak","writer":"yazar","writing":"yazma, yazı","written":"yazılı","wrong":"yanlış","yard":"avlu, bahçe","yeah":"evet, ya","year":"yıl","yellow":"sarı","yes":"evet","yesterday":"dün","yet":"henüz, yine de","you":"sen, siz","young":"genç","your":"senin, sizin","yours":"seninki, sizinki","yourself":"kendin","youth":"gençlik","zero":"sıfır","zone":"bölge","an":"bir","at":"-de, -da","cheerful":"neşeli, keyifli","could":"-ebilirdi","despite":"-e rağmen","fascinating":"büyüleyici, çok ilginç","her":"onu, onun (kadın)","hesitate":"tereddüt etmek","inspire":"ilham vermek","review":"gözden geçirmek; inceleme","revise":"gözden geçirmek, revize etmek"};
+
+</script>
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const DEFAULT_STATE={
+  level:null,xp:0,streak:0,lastActive:null,
+  lessonsDone:[],gamesPlayed:0,correctTotal:0,perfectRounds:0,
+  spellDone:0,listenDone:0,sentencesDone:0,wordsStudied:0,achievements:[]
+};
+let S={...DEFAULT_STATE};
+const STORE_KEY="alperen_english_state";
+async function loadState(){
+  let loaded=false;
+  // Primary: browser localStorage (works in Safari + Home Screen apps)
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){S={...DEFAULT_STATE,...JSON.parse(raw)};loaded=true;}
+  }catch(e){}
+  // Fallback: Claude artifact storage (only when running inside Claude)
+  if(!loaded && typeof window!=="undefined" && window.storage){
+    try{const r=await window.storage.get("state");if(r&&r.value){S={...DEFAULT_STATE,...JSON.parse(r.value)};}}catch(e){}
+  }
+  handleStreak();
+}
+async function saveState(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){}
+  if(typeof window!=="undefined" && window.storage){
+    try{ await window.storage.set("state", JSON.stringify(S)); }catch(e){}
+  }
+}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function handleStreak(){
+  const t=todayStr();if(S.lastActive===t)return;
+  const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if(S.lastActive===y)S.streak+=1;else S.streak=1;
+  S.lastActive=t;saveState();
+}
+
+/* ============================================================
+   İREM ENCOURAGEMENT (English)
+   ============================================================ */
+const IREM_NOTES=[
+  "I'm so proud of you. Every day you get a little better. 💛",
+  "You're doing great, Alperen. Even one word is a big step.",
+  "You always find a way through the hard things. I'm with you. 🤍",
+  "Slowly but surely. I believe in you.",
+  "Learning a language takes courage — and you have it.",
+  "Small steps open long roads. Keep going, my love. ✨",
+  "Everything you learn today makes tomorrow's you stronger.",
+  "Mistakes are part of learning. Don't be afraid — just try. 💪",
+  "Seeing how far you've come makes me really happy.",
+  "If you start it, you finish it. I've always known that."
+];
+function iremNoteOfDay(){const d=new Date();return IREM_NOTES[(d.getFullYear()*372+d.getMonth()*31+d.getDate())%IREM_NOTES.length];}
+function iremCheer(pct){
+  if(pct>=80)return "İrem: Perfect! I'm so proud of you 💛";
+  if(pct>=50)return "İrem: Nice work, keep it up 🤍";
+  return "İrem: What matters is that you try. I'm with you 💪";
+}
+
+/* ============================================================
+   PICTURE VOCAB (translated set for the game)
+   ============================================================ */
+const VOCAB=[
+  {img:"🍎",en:"apple",tr:"elma"},{img:"🍞",en:"bread",tr:"ekmek"},{img:"💧",en:"water",tr:"su"},
+  {img:"🥛",en:"milk",tr:"süt"},{img:"🥚",en:"egg",tr:"yumurta"},{img:"🧀",en:"cheese",tr:"peynir"},
+  {img:"☕",en:"coffee",tr:"kahve"},{img:"🍵",en:"tea",tr:"çay"},{img:"🍖",en:"meat",tr:"et"},
+  {img:"🐟",en:"fish",tr:"balık"},{img:"🧂",en:"salt",tr:"tuz"},{img:"🍽️",en:"food",tr:"yemek"},
+  {img:"🏠",en:"house",tr:"ev"},{img:"🚪",en:"door",tr:"kapı"},{img:"🪟",en:"window",tr:"pencere"},
+  {img:"🛏️",en:"bed",tr:"yatak"},{img:"🪑",en:"chair",tr:"sandalye"},{img:"🔑",en:"key",tr:"anahtar"},
+  {img:"⏰",en:"clock",tr:"saat"},{img:"💡",en:"light",tr:"ışık"},{img:"📱",en:"phone",tr:"telefon"},
+  {img:"💻",en:"computer",tr:"bilgisayar"},{img:"📖",en:"book",tr:"kitap"},{img:"✏️",en:"pen",tr:"kalem"},
+  {img:"💰",en:"money",tr:"para"},{img:"👜",en:"bag",tr:"çanta"},{img:"👕",en:"shirt",tr:"gömlek"},
+  {img:"👖",en:"trousers",tr:"pantolon"},{img:"👟",en:"shoe",tr:"ayakkabı"},{img:"🧥",en:"coat",tr:"ceket"},
+  {img:"🚗",en:"car",tr:"araba"},{img:"🚌",en:"bus",tr:"otobüs"},{img:"🚆",en:"train",tr:"tren"},
+  {img:"✈️",en:"plane",tr:"uçak"},{img:"🛣️",en:"road",tr:"yol"},{img:"🏙️",en:"city",tr:"şehir"},
+  {img:"🏫",en:"school",tr:"okul"},{img:"🏥",en:"hospital",tr:"hastane"},{img:"🏪",en:"shop",tr:"dükkan"},
+  {img:"🏦",en:"bank",tr:"banka"},{img:"👨",en:"man",tr:"adam"},{img:"👩",en:"woman",tr:"kadın"},
+  {img:"🧒",en:"child",tr:"çocuk"},{img:"👨‍👩‍👧",en:"family",tr:"aile"},{img:"👫",en:"friend",tr:"arkadaş"},
+  {img:"👁️",en:"eye",tr:"göz"},{img:"✋",en:"hand",tr:"el"},{img:"🦶",en:"foot",tr:"ayak"},
+  {img:"👄",en:"mouth",tr:"ağız"},{img:"👂",en:"ear",tr:"kulak"},{img:"👃",en:"nose",tr:"burun"},
+  {img:"❤️",en:"heart",tr:"kalp"},{img:"🐕",en:"dog",tr:"köpek"},{img:"🐈",en:"cat",tr:"kedi"},
+  {img:"🐦",en:"bird",tr:"kuş"},{img:"🐴",en:"horse",tr:"at"},{img:"🌳",en:"tree",tr:"ağaç"},
+  {img:"🌸",en:"flower",tr:"çiçek"},{img:"☀️",en:"sun",tr:"güneş"},{img:"🌙",en:"moon",tr:"ay"},
+  {img:"⭐",en:"star",tr:"yıldız"},{img:"🌧️",en:"rain",tr:"yağmur"},{img:"❄️",en:"snow",tr:"kar"},
+  {img:"🔥",en:"fire",tr:"ateş"},{img:"🌊",en:"sea",tr:"deniz"},{img:"🏔️",en:"mountain",tr:"dağ"},
+  {img:"🌍",en:"world",tr:"dünya"},{img:"⏳",en:"time",tr:"zaman"},{img:"📅",en:"day",tr:"gün"},
+  {img:"🌃",en:"night",tr:"gece"},{img:"🌅",en:"morning",tr:"sabah"},{img:"😀",en:"happy",tr:"mutlu"},
+  {img:"😢",en:"sad",tr:"üzgün"},{img:"😴",en:"tired",tr:"yorgun"},{img:"🤒",en:"sick",tr:"hasta"},
+  {img:"😊",en:"good",tr:"iyi"},{img:"👎",en:"bad",tr:"kötü"},{img:"🐘",en:"big",tr:"büyük"},
+  {img:"🐁",en:"small",tr:"küçük"},{img:"🥵",en:"hot",tr:"sıcak"},{img:"🥶",en:"cold",tr:"soğuk"},
+  {img:"🆕",en:"new",tr:"yeni"},{img:"📜",en:"old",tr:"eski"},{img:"🔓",en:"open",tr:"açık"},
+  {img:"🔒",en:"closed",tr:"kapalı"},{img:"🏃",en:"run",tr:"koşmak"},{img:"🚶",en:"walk",tr:"yürümek"},
+  {img:"🥤",en:"drink",tr:"içmek"},{img:"💬",en:"speak",tr:"konuşmak"},{img:"👀",en:"see",tr:"görmek"},
+  {img:"✍️",en:"write",tr:"yazmak"},{img:"💭",en:"think",tr:"düşünmek"},{img:"❤️",en:"love",tr:"sevmek"},
+  {img:"🤝",en:"help",tr:"yardım"},{img:"🛒",en:"buy",tr:"satın almak"},{img:"🎁",en:"give",tr:"vermek"},
+  {img:"🏃‍♂️",en:"go",tr:"gitmek"},{img:"👋",en:"hello",tr:"merhaba"},{img:"🙏",en:"thanks",tr:"teşekkürler"},
+  {img:"✅",en:"yes",tr:"evet"},{img:"❌",en:"no",tr:"hayır"}
+];
+const SPELL_WORDS=VOCAB.filter(w=>!w.en.includes(" "));
+
+/* ============================================================
+   PLACEMENT
+   ============================================================ */
+const PLACEMENT=[
+  {q:"She ___ a teacher.",opts:["is","are","am","be"],a:0,w:1},
+  {q:"I ___ from Turkey.",opts:["am","is","are","be"],a:0,w:1},
+  {q:"They ___ my friends.",opts:["are","is","am","be"],a:0,w:1},
+  {q:"He ___ coffee every morning.",opts:["drink","drinks","drinking","drank"],a:1,w:2},
+  {q:"We ___ to the cinema last night.",opts:["go","goes","went","gone"],a:2,w:2},
+  {q:"There ___ some milk in the fridge.",opts:["is","are","am","be"],a:0,w:2},
+  {q:"I ___ living here since 2019.",opts:["am","have been","was","be"],a:1,w:3},
+  {q:"If it rains, we ___ stay home.",opts:["will","would","are","did"],a:0,w:3},
+  {q:"This book is ___ than that one.",opts:["interesting","more interesting","most interesting","interestinger"],a:1,w:3},
+  {q:"By next year, she ___ finished her studies.",opts:["will have","will","has","had"],a:0,w:4},
+  {q:"I wish I ___ more time to travel.",opts:["have","had","will have","having"],a:1,w:4},
+  {q:"The report ___ by the team yesterday.",opts:["was written","wrote","is writing","writes"],a:0,w:4}
+];
+
+/* ============================================================
+   LESSONS  (deeper: when/why + many examples)
+   Each lesson: teach[] cards (h, p, rule?, exs[], tip?), then ex[] (>=8)
+   ============================================================ */
+const LESSONS={
+ A1:[
+  {id:"A1-1",title:"To be — am / is / are",teach:[
+    {h:"What is 'to be'?",
+     p:"'To be' is the most common verb in English. It links a subject to a description: who or what someone is, how they feel, or where they are.",
+     rule:"NE ZAMAN: bir şeyin ne olduğunu, nasıl olduğunu veya nerede olduğunu söylerken. Türkçede çoğu zaman '-dır' eki ya da hiç fiil yoktur.",
+     exs:[{en:"I <b>am</b> a teacher.",tr:"Ben öğretmenim."},
+          {en:"She <b>is</b> happy.",tr:"O mutlu."},
+          {en:"We <b>are</b> at home.",tr:"Biz evdeyiz."},
+          {en:"The coffee <b>is</b> hot.",tr:"Kahve sıcak."},
+          {en:"They <b>are</b> Turkish.",tr:"Onlar Türk."}]},
+    {h:"Choosing am / is / are",
+     p:"The form depends on the subject.",
+     rule:"I → am • he / she / it → is • you / we / they → are",
+     exs:[{en:"I <b>am</b> ready.",tr:"Hazırım."},
+          {en:"He <b>is</b> my brother.",tr:"O benim kardeşim."},
+          {en:"You <b>are</b> kind.",tr:"Naziksin."}],
+     tip:"Kısaltmalar çok yaygın: I am = I'm, she is = she's, they are = they're."},
+    {h:"Negatives and questions",
+     p:"For 'not', add it after the verb. For questions, put the verb first.",
+     exs:[{en:"I <b>am not</b> tired.",tr:"Yorgun değilim."},
+          {en:"She <b>isn't</b> here.",tr:"O burada değil."},
+          {en:"<b>Are</b> you happy?",tr:"Mutlu musun?"},
+          {en:"<b>Is</b> he a doctor?",tr:"O doktor mu?"}]}],
+   ex:[
+    {q:"I ___ a student.",opts:["am","is","are"],a:0,ex:"'I' → <b>am</b>."},
+    {q:"He ___ my brother.",opts:["am","is","are"],a:1,ex:"'He' → <b>is</b>."},
+    {q:"We ___ friends.",opts:["am","is","are"],a:2,ex:"'We' → <b>are</b>."},
+    {q:"The cat ___ black.",opts:["am","is","are"],a:1,ex:"One thing (it) → <b>is</b>."},
+    {q:"You ___ very kind.",opts:["am","is","are"],a:2,ex:"'You' → <b>are</b>."},
+    {q:"They ___ at school.",opts:["am","is","are"],a:2,ex:"'They' → <b>are</b>."},
+    {q:"It ___ cold today.",opts:["am","is","are"],a:1,ex:"'It' → <b>is</b>."},
+    {q:"___ you tired?",opts:["Am","Is","Are"],a:2,ex:"Question with 'you' → <b>Are</b> you...?"},
+    {q:"She ___ not here.",opts:["am","is","are"],a:1,ex:"'She' → <b>is</b> not (isn't)."},
+    {q:"I ___ from Istanbul.",opts:["am","is","are"],a:0,ex:"'I' → <b>am</b>."}]},
+
+  {id:"A1-2",title:"Articles — a / an / the",teach:[
+    {h:"a and an — 'one, any'",
+     p:"Use a/an before a singular thing when it is not specific — any one of its kind.",
+     rule:"a → sessiz harf sesinden önce • an → sesli harf sesinden önce (a, e, i, o, u)",
+     exs:[{en:"I have <b>a</b> car.",tr:"Bir arabam var."},
+          {en:"She ate <b>an</b> apple.",tr:"Bir elma yedi."},
+          {en:"He is <b>an</b> engineer.",tr:"O bir mühendis."},
+          {en:"It's <b>a</b> big house.",tr:"Büyük bir ev."}],
+     tip:"Ses önemli, harf değil: 'an hour' (h okunmaz), 'a university' (yu- sesi)."},
+    {h:"the — 'that specific one'",
+     p:"Use 'the' when both people know exactly which thing is meant, or when it was mentioned before.",
+     rule:"NE ZAMAN 'the': belirli, bilinen bir şeyden bahsederken.",
+     exs:[{en:"Close <b>the</b> door.",tr:"Kapıyı kapat. (belirli kapı)"},
+          {en:"I saw a dog. <b>The</b> dog was big.",tr:"Bir köpek gördüm. Köpek büyüktü."},
+          {en:"<b>The</b> sun is hot.",tr:"Güneş sıcaktır. (tek olan şey)"}]}],
+   ex:[
+    {q:"I have ___ car.",opts:["a","an","the"],a:0,ex:"consonant sound → <b>a</b>."},
+    {q:"She ate ___ orange.",opts:["a","an","the"],a:1,ex:"vowel → <b>an</b>."},
+    {q:"He is ___ engineer.",opts:["a","an","the"],a:1,ex:"vowel sound → <b>an</b>."},
+    {q:"It is ___ house.",opts:["a","an","the"],a:0,ex:"consonant sound → <b>a</b>."},
+    {q:"Please close ___ door.",opts:["a","an","the"],a:2,ex:"specific door → <b>the</b>."},
+    {q:"___ sun is very bright.",opts:["A","An","The"],a:2,ex:"only one sun → <b>the</b>."},
+    {q:"I need ___ umbrella.",opts:["a","an","the"],a:1,ex:"vowel sound → <b>an</b>."},
+    {q:"We watched ___ film last night.",opts:["a","an","the"],a:0,ex:"one film, first mention → <b>a</b>."}]},
+
+  {id:"A1-3",title:"Plurals — one and many",teach:[
+    {h:"Regular plurals",
+     p:"To talk about more than one, we usually change the end of the noun.",
+     rule:"Çoğu kelime: +s • s, x, ch, sh ile biten: +es • sessiz+y: y→ies",
+     exs:[{en:"one cat → two cat<b>s</b>",tr:"kedi → kediler"},
+          {en:"one box → two box<b>es</b>",tr:"kutu → kutular"},
+          {en:"one city → two cit<b>ies</b>",tr:"şehir → şehirler"},
+          {en:"one dish → two dish<b>es</b>",tr:"tabak → tabaklar"}]},
+    {h:"Irregular plurals",
+     p:"Some common words change completely. These must be memorized.",
+     exs:[{en:"man → <b>men</b>",tr:"adam → adamlar"},
+          {en:"woman → <b>women</b>",tr:"kadın → kadınlar"},
+          {en:"child → <b>children</b>",tr:"çocuk → çocuklar"},
+          {en:"foot → <b>feet</b>",tr:"ayak → ayaklar"},
+          {en:"tooth → <b>teeth</b>",tr:"diş → dişler"}]}],
+   ex:[
+    {q:"Plural of 'dog'?",opts:["dogs","doges","dogies"],a:0,ex:"just add <b>-s</b>."},
+    {q:"Plural of 'watch'?",opts:["watchs","watches","watchies"],a:1,ex:"after 'ch' → <b>-es</b>."},
+    {q:"Plural of 'city'?",opts:["citys","cityes","cities"],a:2,ex:"consonant+y → <b>-ies</b>."},
+    {q:"Plural of 'man'?",opts:["mans","men","mens"],a:1,ex:"irregular → <b>men</b>."},
+    {q:"Plural of 'child'?",opts:["childs","childes","children"],a:2,ex:"irregular → <b>children</b>."},
+    {q:"Plural of 'box'?",opts:["boxs","boxes","boxies"],a:1,ex:"after 'x' → <b>-es</b>."},
+    {q:"Plural of 'foot'?",opts:["foots","feet","footes"],a:1,ex:"irregular → <b>feet</b>."},
+    {q:"Plural of 'book'?",opts:["books","bookes","bookies"],a:0,ex:"just add <b>-s</b>."}]},
+
+  {id:"A1-4",title:"This / That / These / Those",teach:[
+    {h:"Pointing at things",
+     p:"These words point to people or objects and show if they are near or far.",
+     rule:"YAKIN: this (tekil), these (çoğul) • UZAK: that (tekil), those (çoğul)",
+     exs:[{en:"<b>This</b> is my pen.",tr:"Bu benim kalemim. (yakın)"},
+          {en:"<b>That</b> is your car.",tr:"Şu senin araban. (uzak)"},
+          {en:"<b>These</b> shoes are new.",tr:"Bu ayakkabılar yeni."},
+          {en:"<b>Those</b> birds are singing.",tr:"Şu kuşlar ötüyor."}]}],
+   ex:[
+    {q:"___ apple here is fresh.",opts:["This","These","Those"],a:0,ex:"near + singular → <b>this</b>."},
+    {q:"___ mountains far away are high.",opts:["This","That","Those"],a:2,ex:"far + plural → <b>those</b>."},
+    {q:"___ shoes are new.",opts:["This","These","That"],a:1,ex:"near + plural → <b>these</b>."},
+    {q:"Look at ___ bird over there.",opts:["this","these","that"],a:2,ex:"far + singular → <b>that</b>."},
+    {q:"___ is my house, right here.",opts:["This","These","Those"],a:0,ex:"near + singular → <b>this</b>."},
+    {q:"I like ___ flowers here.",opts:["this","these","that"],a:1,ex:"near + plural → <b>these</b>."},
+    {q:"Who are ___ people over there?",opts:["this","these","those"],a:2,ex:"far + plural → <b>those</b>."},
+    {q:"Give me ___ book near you.",opts:["this","these","those"],a:0,ex:"near + singular → <b>this</b>."}]}
+ ],
+ A2:[
+  {id:"A2-1",title:"Present Simple — habits & facts",teach:[
+    {h:"When do we use it?",
+     p:"The present simple is for things that are generally true, or that happen regularly — habits, routines, facts.",
+     rule:"NE ZAMAN: her zaman/genellikle olan şeyler, alışkanlıklar, genel gerçekler. Sık kullanılan zaman ifadeleri: always, usually, often, every day, on Mondays.",
+     exs:[{en:"I <b>work</b> in an office.",tr:"Ofiste çalışırım. (genel gerçek)"},
+          {en:"She <b>drinks</b> tea every morning.",tr:"Her sabah çay içer. (alışkanlık)"},
+          {en:"Water <b>boils</b> at 100°C.",tr:"Su 100°C'de kaynar. (gerçek)"},
+          {en:"We <b>live</b> in Istanbul.",tr:"İstanbul'da yaşıyoruz."}]},
+    {h:"The he/she/it rule",
+     p:"This is the key rule. For he, she, and it, add -s (or -es) to the verb.",
+     rule:"he / she / it → fiil + s  (go→goes, watch→watches, study→studies)",
+     exs:[{en:"He <b>plays</b> football.",tr:"O futbol oynar."},
+          {en:"She <b>goes</b> to work by bus.",tr:"İşe otobüsle gider."},
+          {en:"It <b>rains</b> a lot here.",tr:"Burada çok yağmur yağar."}],
+     tip:"I, you, we, they ile fiil değişmez: I play, they go."},
+    {h:"Negatives and questions",
+     p:"We use 'do' and 'does' as helpers. After does/doesn't, the main verb loses its -s.",
+     exs:[{en:"I <b>don't</b> eat meat.",tr:"Et yemem."},
+          {en:"She <b>doesn't</b> like coffee.",tr:"Kahve sevmez."},
+          {en:"<b>Do</b> you speak English?",tr:"İngilizce konuşur musun?"},
+          {en:"<b>Does</b> he work here?",tr:"O burada mı çalışır?"}]}],
+   ex:[
+    {q:"He ___ football on Sundays.",opts:["play","plays","playing"],a:1,ex:"he → add <b>-s</b>."},
+    {q:"I ___ tea every morning.",opts:["drink","drinks","drinking"],a:0,ex:"'I' → no -s."},
+    {q:"They ___ in Istanbul.",opts:["lives","live","living"],a:1,ex:"'they' → no -s."},
+    {q:"She ___ English very well.",opts:["speak","speaks","speaking"],a:1,ex:"she → <b>speaks</b>."},
+    {q:"Water ___ at 100 degrees.",opts:["boil","boils","boiling"],a:1,ex:"it → <b>boils</b>."},
+    {q:"She ___ like coffee.",opts:["don't","doesn't","isn't"],a:1,ex:"she → <b>doesn't</b>."},
+    {q:"___ you work here?",opts:["Do","Does","Are"],a:0,ex:"you → <b>Do</b> you...?"},
+    {q:"He ___ go to the gym.",opts:["don't","doesn't","not"],a:1,ex:"he → <b>doesn't</b>."},
+    {q:"My father ___ to work by car.",opts:["go","goes","going"],a:1,ex:"he → <b>goes</b>."},
+    {q:"We ___ TV in the evening.",opts:["watches","watch","watching"],a:1,ex:"we → <b>watch</b>."}]},
+
+  {id:"A2-2",title:"Present Continuous — now",teach:[
+    {h:"When do we use it?",
+     p:"The present continuous describes an action happening right now, at this moment, or around this period of time.",
+     rule:"NE ZAMAN: tam şu anda olan eylemler. İşaret kelimeler: now, right now, at the moment, Look!, Listen!",
+     exs:[{en:"I <b>am eating</b> now.",tr:"Şimdi yemek yiyorum."},
+          {en:"Look! It <b>is raining</b>.",tr:"Bak! Yağmur yağıyor."},
+          {en:"They <b>are playing</b> outside.",tr:"Dışarıda oynuyorlar."},
+          {en:"She <b>is working</b> at the moment.",tr:"Şu an çalışıyor."}]},
+    {h:"How to build it",
+     p:"am/is/are + verb-ing. Choose am/is/are the same way as the verb 'to be'.",
+     rule:"I am + -ing • he/she/it is + -ing • you/we/they are + -ing",
+     exs:[{en:"I <b>am reading</b> a book.",tr:"Kitap okuyorum."},
+          {en:"He <b>is sleeping</b>.",tr:"O uyuyor."},
+          {en:"We <b>are watching</b> a film.",tr:"Film izliyoruz."}],
+     tip:"Present simple = alışkanlık, continuous = şu an. 'I work' (her gün) ≠ 'I am working' (şu an)."}],
+   ex:[
+    {q:"Look! It ___ raining.",opts:["is","are","am"],a:0,ex:"it → <b>is</b> raining."},
+    {q:"We ___ watching a film.",opts:["is","am","are"],a:2,ex:"we → <b>are</b>."},
+    {q:"She is ___ a letter.",opts:["write","writing","writes"],a:1,ex:"is + <b>-ing</b>."},
+    {q:"I ___ studying right now.",opts:["am","is","are"],a:0,ex:"I → <b>am</b>."},
+    {q:"They ___ playing football.",opts:["is","am","are"],a:2,ex:"they → <b>are</b>."},
+    {q:"He is ___ at the moment.",opts:["sleep","sleeps","sleeping"],a:2,ex:"is + <b>sleeping</b>."},
+    {q:"Listen! The baby ___ crying.",opts:["is","are","am"],a:0,ex:"the baby (it) → <b>is</b>."},
+    {q:"What ___ you doing now?",opts:["is","am","are"],a:2,ex:"you → <b>are</b>."}]},
+
+  {id:"A2-3",title:"Past Simple — finished past",teach:[
+    {h:"When do we use it?",
+     p:"The past simple describes actions that started and finished in the past. The time is usually known or stated.",
+     rule:"NE ZAMAN: geçmişte bitmiş eylemler. İşaret kelimeler: yesterday, last week, in 2010, two days ago.",
+     exs:[{en:"I <b>walked</b> to work yesterday.",tr:"Dün işe yürüdüm."},
+          {en:"We <b>watched</b> a film last night.",tr:"Dün gece film izledik."},
+          {en:"She <b>lived</b> in Ankara in 2010.",tr:"2010'da Ankara'da yaşadı."}]},
+    {h:"Regular verbs: +ed",
+     p:"Most verbs just add -ed. The form is the same for every subject — no he/she/it change here.",
+     exs:[{en:"work → work<b>ed</b>",tr:"çalıştı"},
+          {en:"play → play<b>ed</b>",tr:"oynadı"},
+          {en:"study → stud<b>ied</b>",tr:"çalıştı (ders)"}]},
+    {h:"Irregular verbs",
+     p:"Many common verbs have special past forms you must learn.",
+     exs:[{en:"go → <b>went</b>",tr:"gitti"},
+          {en:"eat → <b>ate</b>",tr:"yedi"},
+          {en:"see → <b>saw</b>",tr:"gördü"},
+          {en:"have → <b>had</b>",tr:"sahipti / -di"},
+          {en:"buy → <b>bought</b>",tr:"satın aldı"}],
+     tip:"Sorularda ve olumsuzda 'did' kullanılır ve fiil yalın kalır: 'Did you go?', 'I didn't go.'"}],
+   ex:[
+    {q:"Yesterday I ___ a good film.",opts:["watch","watched","watching"],a:1,ex:"regular → <b>-ed</b>."},
+    {q:"She ___ to Ankara last week.",opts:["go","goed","went"],a:2,ex:"go → <b>went</b>."},
+    {q:"They ___ dinner at eight.",opts:["eat","ate","eaten"],a:1,ex:"eat → <b>ate</b>."},
+    {q:"We ___ a new car in 2020.",opts:["buy","buyed","bought"],a:2,ex:"buy → <b>bought</b>."},
+    {q:"He ___ his friends yesterday.",opts:["see","saw","seen"],a:1,ex:"see → <b>saw</b>."},
+    {q:"I ___ at home last night.",opts:["stay","stayed","staying"],a:1,ex:"regular → <b>stayed</b>."},
+    {q:"___ you go to the party?",opts:["Did","Do","Was"],a:0,ex:"past question → <b>Did</b> you go?"},
+    {q:"She ___ come to work yesterday.",opts:["didn't","doesn't","wasn't"],a:0,ex:"past negative → <b>didn't</b> come."},
+    {q:"They ___ a great time.",opts:["have","had","has"],a:1,ex:"have → <b>had</b>."},
+    {q:"I ___ television last night.",opts:["watch","watched","watches"],a:1,ex:"regular → <b>watched</b>."}]},
+
+  {id:"A2-4",title:"Comparatives & Superlatives",teach:[
+    {h:"Comparing TWO things",
+     p:"To compare two things, we use the comparative form with 'than'.",
+     rule:"Kısa kelimeler: sıfat + er + than • Uzun kelimeler (2+ hece): more + sıfat + than",
+     exs:[{en:"A car is <b>faster than</b> a bike.",tr:"Araba bisikletten hızlıdır."},
+          {en:"This is <b>bigger than</b> that.",tr:"Bu şundan büyüktür."},
+          {en:"English is <b>more useful than</b> ...",tr:"İngilizce daha faydalıdır..."}]},
+    {h:"The BEST of all — superlatives",
+     p:"To compare one thing to a whole group, use the superlative with 'the'.",
+     rule:"Kısa: the + sıfat + est • Uzun: the most + sıfat",
+     exs:[{en:"He is <b>the tallest</b> in the class.",tr:"Sınıftaki en uzun kişi."},
+          {en:"It's <b>the most expensive</b> car.",tr:"En pahalı araba."}],
+     tip:"Düzensizler: good→better→best, bad→worse→worst, far→further→furthest."}],
+   ex:[
+    {q:"An elephant is ___ than a mouse.",opts:["big","bigger","biggest"],a:1,ex:"two → <b>bigger than</b>."},
+    {q:"This book is ___ interesting than that.",opts:["more","most","much"],a:0,ex:"long word → <b>more</b>."},
+    {q:"Summer is ___ than winter.",opts:["hot","hotter","hottest"],a:1,ex:"short → <b>-er</b>."},
+    {q:"He is the ___ student in class.",opts:["good","better","best"],a:2,ex:"irregular superlative → <b>best</b>."},
+    {q:"This is ___ car in the shop.",opts:["expensive","more expensive","the most expensive"],a:2,ex:"group → <b>the most expensive</b>."},
+    {q:"My bag is ___ than yours.",opts:["heavy","heavier","heaviest"],a:1,ex:"two → <b>heavier than</b>."},
+    {q:"Today is ___ than yesterday.",opts:["bad","worse","worst"],a:1,ex:"irregular → <b>worse</b>."},
+    {q:"She is the ___ runner on the team.",opts:["fast","faster","fastest"],a:2,ex:"group → <b>the fastest</b>."}]}
+ ],
+ B1:[
+  {id:"B1-1",title:"Present Perfect — past with a link to now",teach:[
+    {h:"When do we use it?",
+     p:"The present perfect connects the past to the present. Use it for life experiences (no exact time), or for past actions that still matter now.",
+     rule:"NE ZAMAN: zamanı belirsiz geçmiş deneyimler VEYA sonucu şimdiyi etkileyen olaylar. İşaret kelimeler: ever, never, already, yet, just, for, since.",
+     exs:[{en:"I <b>have visited</b> London.",tr:"Londra'yı gördüm. (hayat deneyimi)"},
+          {en:"She <b>has finished</b> her work.",tr:"İşini bitirdi. (şimdi bitmiş durumda)"},
+          {en:"They <b>have lived</b> here since 2019.",tr:"2019'dan beri burada yaşıyorlar."},
+          {en:"I <b>have</b> never <b>eaten</b> sushi.",tr:"Hiç suşi yemedim."}]},
+    {h:"How to build it",
+     p:"have/has + past participle (verbin 3. hali).",
+     rule:"I/you/we/they → have + V3 • he/she/it → has + V3",
+     exs:[{en:"I <b>have seen</b> that film.",tr:"O filmi gördüm."},
+          {en:"He <b>has gone</b> home.",tr:"Eve gitti."},
+          {en:"We <b>have done</b> it.",tr:"Onu yaptık."}]},
+    {h:"Present perfect vs past simple",
+     p:"This is the key difference. Past simple = finished time (yesterday). Present perfect = unstated time or still relevant.",
+     exs:[{en:"I <b>saw</b> him yesterday.",tr:"Onu dün gördüm. (belirli zaman)"},
+          {en:"I <b>have seen</b> him before.",tr:"Onu daha önce gördüm. (zaman belirsiz)"}],
+     tip:"'for' = süre (for 3 years), 'since' = başlangıç noktası (since 2019)."}],
+   ex:[
+    {q:"I have ___ been to Paris.",opts:["ever","never","yesterday"],a:1,ex:"experience → <b>never</b> been."},
+    {q:"He ___ lost his keys.",opts:["have","has","had"],a:1,ex:"he → <b>has</b>."},
+    {q:"They have ___ the news.",opts:["hear","heard","hearing"],a:1,ex:"V3 of hear → <b>heard</b>."},
+    {q:"We have lived here ___ 2019.",opts:["for","since","from"],a:1,ex:"start point → <b>since</b>."},
+    {q:"She has worked here ___ five years.",opts:["for","since","from"],a:0,ex:"duration → <b>for</b>."},
+    {q:"I ___ seen that film before.",opts:["have","has","did"],a:0,ex:"I → <b>have</b> seen."},
+    {q:"Have you finished ___?",opts:["yet","ago","last"],a:0,ex:"question → ...finished <b>yet</b>?"},
+    {q:"He ___ him yesterday.",opts:["has seen","saw","have seen"],a:1,ex:"'yesterday' = finished time → <b>saw</b>."},
+    {q:"I have ___ done my homework.",opts:["already","yesterday","ago"],a:0,ex:"→ <b>already</b> done."},
+    {q:"She has ___ to the store.",opts:["go","went","gone"],a:2,ex:"V3 of go → <b>gone</b>."}]},
+
+  {id:"B1-2",title:"Future — will vs going to",teach:[
+    {h:"'will' — decisions & predictions",
+     p:"Use 'will' for a decision made at the moment of speaking, an offer, a promise, or a general prediction.",
+     rule:"NE ZAMAN 'will': şu an verilen karar, teklif, söz veya tahmin. will + yalın fiil.",
+     exs:[{en:"It's cold. I <b>'ll close</b> the window.",tr:"Soğuk. Pencereyi kapatacağım. (anlık karar)"},
+          {en:"I <b>'ll help</b> you.",tr:"Sana yardım edeceğim. (teklif)"},
+          {en:"I think it <b>will rain</b>.",tr:"Sanırım yağmur yağacak. (tahmin)"}]},
+    {h:"'going to' — plans & evidence",
+     p:"Use 'going to' for a plan or intention decided before now, or a prediction based on what you can see now.",
+     rule:"NE ZAMAN 'going to': önceden yapılmış plan VEYA gözle görülen kanıta dayalı tahmin.",
+     exs:[{en:"We <b>are going to</b> travel this summer.",tr:"Bu yaz seyahat edeceğiz. (plan)"},
+          {en:"Look at those clouds! It <b>'s going to</b> rain.",tr:"Şu bulutlara bak! Yağmur yağacak. (kanıt)"}],
+     tip:"Plan varsa 'going to', anlık karar/tahminse 'will'."}],
+   ex:[
+    {q:"It's cold. I ___ close the window.",opts:["will","am going to","would"],a:0,ex:"decision now → <b>will</b>."},
+    {q:"We ___ buy a house next year.",opts:["will","are going to","would"],a:1,ex:"a plan → <b>going to</b>."},
+    {q:"Look at those clouds! It ___ rain.",opts:["is going to","will","would"],a:0,ex:"evidence now → <b>going to</b>."},
+    {q:"That bag looks heavy. I ___ help you.",opts:["will","am going to","would"],a:0,ex:"offer → <b>will</b>."},
+    {q:"They ___ get married in June. It's planned.",opts:["will","are going to","would"],a:1,ex:"plan → <b>going to</b>."},
+    {q:"I think our team ___ win.",opts:["will","going to","is going"],a:0,ex:"prediction → <b>will</b>."},
+    {q:"Careful! You ___ fall.",opts:["will","are going to","would"],a:1,ex:"evidence now → <b>going to</b>."},
+    {q:"I promise I ___ call you.",opts:["will","am going to","would"],a:0,ex:"promise → <b>will</b>."}]},
+
+  {id:"B1-3",title:"First Conditional — real possibilities",teach:[
+    {h:"When do we use it?",
+     p:"The first conditional talks about a real or likely future situation and its result. 'If this happens, that will happen.'",
+     rule:"YAPI: If + present simple, ... will + yalın fiil. Gerçekleşmesi mümkün durumlar için.",
+     exs:[{en:"<b>If</b> it <b>rains</b>, we <b>will stay</b> home.",tr:"Yağmur yağarsa evde kalırız."},
+          {en:"<b>If</b> you <b>study</b>, you <b>will pass</b>.",tr:"Çalışırsan geçersin."},
+          {en:"She <b>will call</b> <b>if</b> she <b>has</b> time.",tr:"Vakti olursa arar."}]},
+    {h:"The important trap",
+     p:"After 'if', use the present tense — NOT will. 'Will' only goes in the result part.",
+     exs:[{en:"✅ If it <b>is</b> sunny, we will go out.",tr:"Güneşliyse dışarı çıkarız."},
+          {en:"❌ If it will be sunny...",tr:"(yanlış: 'if' kısmında will olmaz)"}],
+     tip:"İki kısmın yeri değişebilir: 'We will stay home if it rains.' Anlam aynı."}],
+   ex:[
+    {q:"If you study, you ___ pass.",opts:["will","would","are"],a:0,ex:"result → <b>will</b>."},
+    {q:"If she ___ time, she will call.",opts:["has","will have","had"],a:0,ex:"'if' part → present simple."},
+    {q:"We will go out if it ___ sunny.",opts:["will be","is","was"],a:1,ex:"after 'if' → present <b>is</b>."},
+    {q:"If he ___ late, we will start without him.",opts:["is","will be","was"],a:0,ex:"'if' → present <b>is</b>."},
+    {q:"They will be happy if we ___.",opts:["win","will win","won"],a:0,ex:"'if' → present <b>win</b>."},
+    {q:"If it rains, I ___ take an umbrella.",opts:["will","would","am"],a:0,ex:"result → <b>will</b>."},
+    {q:"You ___ feel better if you rest.",opts:["will","would","are"],a:0,ex:"result → <b>will</b>."},
+    {q:"If I ___ you, I'll tell you.",opts:["see","will see","saw"],a:0,ex:"'if' → present <b>see</b>."}]}
+ ],
+ B2:[
+  {id:"B2-1",title:"Present Perfect Continuous",teach:[
+    {h:"When do we use it?",
+     p:"Use it for an action that started in the past and is still going on now, especially to emphasize how long it has continued.",
+     rule:"YAPI: have/has + been + verb-ing. Vurgu: eylemin SÜRESİ ve hâlâ devam etmesi.",
+     exs:[{en:"I <b>have been working</b> since morning.",tr:"Sabahtan beri çalışıyorum."},
+          {en:"She <b>has been studying</b> for three hours.",tr:"Üç saattir ders çalışıyor."},
+          {en:"They <b>have been living</b> here for years.",tr:"Yıllardır burada yaşıyorlar."}]},
+    {h:"vs Present Perfect Simple",
+     p:"Continuous stresses the ongoing activity/duration; simple stresses the completed result.",
+     exs:[{en:"I <b>have been reading</b> this book.",tr:"Bu kitabı okuyorum. (süreç, devam ediyor)"},
+          {en:"I <b>have read</b> this book.",tr:"Bu kitabı okudum. (bitti, sonuç)"}],
+     tip:"'How long...?' sorularında genellikle continuous kullanılır."}],
+   ex:[
+    {q:"She has ___ studying for hours.",opts:["been","being","be"],a:0,ex:"have + <b>been</b> + -ing."},
+    {q:"They have been ___ all day.",opts:["travel","travelled","travelling"],a:2,ex:"need <b>-ing</b> form."},
+    {q:"How long ___ you been waiting?",opts:["have","has","are"],a:0,ex:"you → <b>have</b>."},
+    {q:"He has been ___ since noon.",opts:["work","worked","working"],a:2,ex:"been + <b>working</b>."},
+    {q:"I ___ been feeling tired lately.",opts:["have","has","am"],a:0,ex:"I → <b>have</b>."},
+    {q:"It ___ been raining for hours.",opts:["have","has","is"],a:1,ex:"it → <b>has</b>."},
+    {q:"We have been ___ for you.",opts:["wait","waited","waiting"],a:2,ex:"been + <b>waiting</b>."},
+    {q:"She has ___ been learning English.",opts:["been","being","be"],a:0,ex:"has + <b>been</b> + -ing."}]},
+
+  {id:"B2-2",title:"Passive Voice",teach:[
+    {h:"When do we use it?",
+     p:"Use the passive when the action or its receiver matters more than who does it — or when the doer is unknown or obvious.",
+     rule:"YAPI: be + past participle (V3). Eylemi yapan önemli değilse veya bilinmiyorsa.",
+     exs:[{en:"The house <b>was built</b> in 1990.",tr:"Ev 1990'da inşa edildi."},
+          {en:"English <b>is spoken</b> here.",tr:"Burada İngilizce konuşulur."},
+          {en:"My car <b>was stolen</b>.",tr:"Arabam çalındı. (kim çaldı bilinmiyor)"}]},
+    {h:"Active vs passive",
+     p:"In the active, the doer is the subject. In the passive, the receiver becomes the subject.",
+     exs:[{en:"Active: Shakespeare <b>wrote</b> Hamlet.",tr:"Shakespeare Hamlet'i yazdı."},
+          {en:"Passive: Hamlet <b>was written</b> by Shakespeare.",tr:"Hamlet Shakespeare tarafından yazıldı."}],
+     tip:"Yapanı belirtmek istersen 'by' kullan: '...by the team.'"}],
+   ex:[
+    {q:"The letter ___ written yesterday.",opts:["was","is","has"],a:0,ex:"past passive → <b>was</b> written."},
+    {q:"Coffee ___ grown in Brazil.",opts:["is","are","was"],a:0,ex:"present passive → <b>is</b> grown."},
+    {q:"The window was ___ by the wind.",opts:["break","broke","broken"],a:2,ex:"V3 → <b>broken</b>."},
+    {q:"These cars ___ made in Germany.",opts:["is","are","was"],a:1,ex:"plural → <b>are</b> made."},
+    {q:"The thief ___ arrested last night.",opts:["was","is","has"],a:0,ex:"past → <b>was</b> arrested."},
+    {q:"English ___ spoken in many countries.",opts:["is","are","was"],a:0,ex:"present → <b>is</b> spoken."},
+    {q:"The bridge ___ built next year.",opts:["will be","is","was"],a:0,ex:"future passive → <b>will be</b> built."},
+    {q:"My phone ___ stolen at the party.",opts:["was","is","has"],a:0,ex:"past → <b>was</b> stolen."}]},
+
+  {id:"B2-3",title:"Second Conditional — imaginary",teach:[
+    {h:"When do we use it?",
+     p:"The second conditional talks about unreal, imaginary, or unlikely situations in the present or future, and their imagined results.",
+     rule:"YAPI: If + past simple, ... would + yalın fiil. Gerçek olmayan/hayali durumlar için.",
+     exs:[{en:"If I <b>had</b> money, I <b>would</b> travel.",tr:"Param olsa seyahat ederdim. (ama yok)"},
+          {en:"If I <b>were</b> you, I <b>would</b> rest.",tr:"Senin yerinde olsam dinlenirdim."},
+          {en:"What <b>would</b> you do if you <b>won</b>?",tr:"Kazansan ne yapardın?"}]},
+    {h:"First vs second conditional",
+     p:"First = real/likely (If it rains, I will stay). Second = imaginary/unlikely (If I were rich, I would buy...).",
+     exs:[{en:"1st: If I <b>have</b> time, I <b>will</b> call.",tr:"Vaktim olursa ararım. (mümkün)"},
+          {en:"2nd: If I <b>had</b> time, I <b>would</b> call.",tr:"Vaktim olsa arardım. (ama yok)"}],
+     tip:"İkinci koşulda 'I/he/she' ile bile genelde 'were' kullanılır: 'If I were...'"}],
+   ex:[
+    {q:"If I ___ you, I would rest.",opts:["was","were","am"],a:1,ex:"standard → 'if I <b>were</b>'."},
+    {q:"She would help if she ___ time.",opts:["has","had","will have"],a:1,ex:"'if' → past simple <b>had</b>."},
+    {q:"If we won, we ___ celebrate.",opts:["will","would","are"],a:1,ex:"result → <b>would</b>."},
+    {q:"If I ___ rich, I would buy a boat.",opts:["am","were","will be"],a:1,ex:"imaginary → <b>were</b>."},
+    {q:"What would you do if you ___ the lottery?",opts:["win","won","will win"],a:1,ex:"'if' → past <b>won</b>."},
+    {q:"He would travel if he ___ the chance.",opts:["has","had","have"],a:1,ex:"'if' → past <b>had</b>."},
+    {q:"If she studied, she ___ pass.",opts:["will","would","is"],a:1,ex:"result → <b>would</b>."},
+    {q:"I ___ tell him if I knew.",opts:["will","would","am"],a:1,ex:"result → <b>would</b>."}]}
+ ]
+};
+const LEVEL_ORDER=["A1","A2","B1","B2"];
+const LEVEL_NAME={A1:"Başlangıç",A2:"Temel",B1:"Orta",B2:"İyi"};
+
+/* ============================================================
+   SENTENCE-BUILDING (order the words) + word-in-context
+   ============================================================ */
+const SENTENCES={
+ A1:[
+  {s:"I am a student",tr:"Ben bir öğrenciyim."},
+  {s:"She has a big house",tr:"Onun büyük bir evi var."},
+  {s:"We go to school every day",tr:"Her gün okula gideriz."},
+  {s:"He is my best friend",tr:"O benim en iyi arkadaşım."},
+  {s:"They live in the city",tr:"Onlar şehirde yaşıyor."},
+  {s:"The cat is on the table",tr:"Kedi masanın üstünde."},
+  {s:"I like coffee in the morning",tr:"Sabahları kahve severim."},
+  {s:"My mother works in a hospital",tr:"Annem hastanede çalışır."}
+ ],
+ A2:[
+  {s:"She is reading a book now",tr:"Şu an kitap okuyor."},
+  {s:"We watched a film last night",tr:"Dün gece film izledik."},
+  {s:"He does not like cold weather",tr:"Soğuk havayı sevmez."},
+  {s:"I bought a new car yesterday",tr:"Dün yeni bir araba aldım."},
+  {s:"This book is more interesting than that",tr:"Bu kitap şundan daha ilginç."},
+  {s:"They are playing football outside",tr:"Dışarıda futbol oynuyorlar."},
+  {s:"My brother is taller than me",tr:"Kardeşim benden uzun."},
+  {s:"We usually have dinner at eight",tr:"Genelde sekizde akşam yemeği yeriz."}
+ ],
+ B1:[
+  {s:"I have never been to Paris",tr:"Hiç Paris'e gitmedim."},
+  {s:"If it rains we will stay home",tr:"Yağmur yağarsa evde kalırız."},
+  {s:"She has lived here since 2019",tr:"2019'dan beri burada yaşıyor."},
+  {s:"We are going to travel this summer",tr:"Bu yaz seyahat edeceğiz."},
+  {s:"He will help you if you ask",tr:"İstersen sana yardım eder."},
+  {s:"They have already finished the work",tr:"İşi çoktan bitirdiler."},
+  {s:"I think it will rain tomorrow",tr:"Sanırım yarın yağmur yağacak."},
+  {s:"You will pass if you study hard",tr:"Sıkı çalışırsan geçersin."}
+ ],
+ B2:[
+  {s:"The house was built many years ago",tr:"Ev yıllar önce inşa edildi."},
+  {s:"If I were you I would rest",tr:"Senin yerinde olsam dinlenirdim."},
+  {s:"She has been working since morning",tr:"Sabahtan beri çalışıyor."},
+  {s:"English is spoken all over the world",tr:"İngilizce tüm dünyada konuşulur."},
+  {s:"I would travel more if I had money",tr:"Param olsa daha çok gezerdim."},
+  {s:"The report was written by the team",tr:"Rapor ekip tarafından yazıldı."},
+  {s:"They have been living here for years",tr:"Yıllardır burada yaşıyorlar."},
+  {s:"What would you do if you won",tr:"Kazansan ne yapardın?"}
+ ]
+};
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+const ACHIEVEMENTS=[
+  {id:"placed",ico:"🧭",nm:"Yola Çıktı",ds:"Seviye testini tamamla",chk:s=>s.level!==null},
+  {id:"first_lesson",ico:"🌱",nm:"İlk Adım",ds:"İlk dersini bitir",chk:s=>s.lessonsDone.length>=1},
+  {id:"five_lessons",ico:"📚",nm:"Çalışkan",ds:"5 ders bitir",chk:s=>s.lessonsDone.length>=5},
+  {id:"ten_lessons",ico:"🎓",nm:"Öğrenci",ds:"10 ders bitir",chk:s=>s.lessonsDone.length>=10},
+  {id:"all_lessons",ico:"👑",nm:"Usta",ds:"Tüm dersleri bitir",chk:s=>s.lessonsDone.length>=totalLessons()},
+  {id:"streak3",ico:"🔥",nm:"3 Gün",ds:"3 gün üst üste",chk:s=>s.streak>=3},
+  {id:"streak7",ico:"⚡",nm:"1 Hafta",ds:"7 gün üst üste",chk:s=>s.streak>=7},
+  {id:"game10",ico:"🎮",nm:"Oyuncu",ds:"10 oyun oyna",chk:s=>s.gamesPlayed>=10},
+  {id:"perfect",ico:"⭐",nm:"Kusursuz",ds:"Tam puanlı tur",chk:s=>s.perfectRounds>=1},
+  {id:"speller",ico:"🔤",nm:"Hecele",ds:"20 kelime yaz",chk:s=>s.spellDone>=20},
+  {id:"listener",ico:"🎧",nm:"Kulak",ds:"20 dinleme çöz",chk:s=>s.listenDone>=20},
+  {id:"builder",ico:"🧩",nm:"Cümleci",ds:"20 cümle kur",chk:s=>s.sentencesDone>=20},
+  {id:"reader",ico:"📖",nm:"Kelime Avcısı",ds:"100 kelime çalış",chk:s=>s.wordsStudied>=100},
+  {id:"words100",ico:"💯",nm:"100 Doğru",ds:"100 doğru cevap",chk:s=>s.correctTotal>=100},
+  {id:"xp500",ico:"🏆",nm:"Şampiyon",ds:"500 XP topla",chk:s=>s.xp>=500}
+];
+function totalLessons(){return LEVEL_ORDER.reduce((n,lv)=>n+LESSONS[lv].length,0);}
+function checkAchievements(){
+  const nw=[];
+  for(const a of ACHIEVEMENTS){if(!S.achievements.includes(a.id)&&a.chk(S)){S.achievements.push(a.id);nw.push(a);}}
+  if(nw.length){saveState();nw.forEach(a=>toast(a.ico+" Başarı: "+a.nm));}
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const view=document.getElementById("view"),streakEl=document.getElementById("streak"),toastEl=document.getElementById("toast");
+let toastTimer=null,toastQueue=[];
+function toast(m){toastQueue.push(m);if(!toastTimer)nextToast();}
+function nextToast(){if(!toastQueue.length){toastTimer=null;return;}const m=toastQueue.shift();
+  toastEl.textContent=m;toastEl.classList.add("show");
+  toastTimer=setTimeout(()=>{toastEl.classList.remove("show");setTimeout(nextToast,400);},1900);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function addXP(n){S.xp+=n;}
+function speak(text){if(!("speechSynthesis" in window))return;const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.8;speechSynthesis.cancel();speechSynthesis.speak(u);}
+function updateHeader(){streakEl.textContent="🔥 "+S.streak;}
+const POS_INFO={noun:{tr:"İsimler",ic:"🧱"},verb:{tr:"Fiiller",ic:"🏃"},adjective:{tr:"Sıfatlar",ic:"🎨"},
+  adverb:{tr:"Zarflar",ic:"⚡"},preposition:{tr:"Edatlar",ic:"🔗"},pronoun:{tr:"Zamirler",ic:"👤"},
+  conjunction:{tr:"Bağlaçlar",ic:"➕"},determiner:{tr:"Belirteçler",ic:"📌"},number:{tr:"Sayılar",ic:"🔢"},exclamation:{tr:"Ünlemler",ic:"💬"}};
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+let currentTab="home";
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  [...document.querySelectorAll("#nav button")].forEach(x=>x.classList.toggle("active",x===b));
+  currentTab=b.dataset.tab;render();
+});
+function goTab(tab){currentTab=tab;
+  [...document.querySelectorAll("#nav button")].forEach(x=>x.classList.toggle("active",x.dataset.tab===tab));render();}
+function render(){
+  updateHeader();
+  if(currentTab==="home")renderHome();
+  else if(currentTab==="lessons")renderLessons();
+  else if(currentTab==="words")renderWordsMenu();
+  else if(currentTab==="game")renderGameMenu();
+  else if(currentTab==="ach")renderAch();
+  else if(currentTab==="progress")renderProgress();
+  document.querySelector("main").scrollTop=0;
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const placed=S.level!==null,next=nextLesson();
+  let html=`<h1>Merhaba Alperen! 👋</h1>
+    <div class="love"><div class="from">From İrem ❤️</div><div class="msg">"${iremNoteOfDay()}"</div></div>
+    <div class="stats">
+      <div class="stat"><div class="n">${S.xp}</div><div class="l">XP</div></div>
+      <div class="stat"><div class="n">🔥${S.streak}</div><div class="l">Gün</div></div>
+      <div class="stat"><div class="n">${S.lessonsDone.length}</div><div class="l">Ders</div></div>
+    </div>`;
+  if(!placed){
+    html+=`<button class="tile" onclick="startPlacement()"><span class="em">🧭</span>
+      <span class="t">Seviye Testi</span>
+      <span class="s">12 kısa soru. Seviyeni bulalım (A1–B2), sonra sana uygun dersleri açalım.</span></button>`;
+  }else{
+    html+=`<div class="tile-row tile" onclick="goTab('lessons')"><span class="em">📘</span>
+      <div class="grow"><div class="t">Seviyen: ${S.level} · ${LEVEL_NAME[S.level]}</div>
+      <div class="s">${next?"Sıradaki: "+next.title:"Tüm dersleri bitirdin! 🎉"}</div></div></div>`;
+    if(next)html+=`<button class="btn btn-primary" onclick="openLesson('${next.id.split('-')[0]}','${next.id}')">Derse başla →</button>`;
+    html+=`<button class="btn btn-leaf btn-sm" onclick="goTab('words')">📖 Kelime çalış (Oxford 3000)</button>
+      <button class="btn btn-sun btn-sm" onclick="startSentence()">🧩 Cümle kurma</button>
+      <button class="btn btn-ghost btn-sm" onclick="startListen()">🎧 Dinleme</button>
+      <button class="btn btn-ghost btn-sm" onclick="startSpell()">🔤 Yazma / heceleme</button>
+      <button class="btn btn-ghost btn-sm" onclick="goTab('progress')">💌 İrem için ilerleme kodu</button>`;
+  }
+  view.innerHTML=html;
+}
+
+/* ---------- PLACEMENT ---------- */
+let plIdx=0,plScore=0,plQ=[];
+function startPlacement(){plIdx=0;plScore=0;
+  plQ=PLACEMENT.map(q=>({q:q.q,opts:shuffle(q.opts.map((t,i)=>({t,correct:i===q.a}))),w:q.w}));renderPlacement();}
+function renderPlacement(){view.classList.remove("vcenter");
+  const q=plQ[plIdx];
+  view.innerHTML=`<button class="back" onclick="goTab('home')">← Çık</button>
+    <div class="qlabel">SEVİYE TESTİ · ${plIdx+1}/${plQ.length}</div>
+    <div class="progress"><div class="progress-bar" style="width:${plIdx/plQ.length*100}%"></div></div>
+    <div class="qcard"><div class="qword small">${q.q.replace("___",'<span class="blank"> ? </span>')}</div>
+    <div class="opts" id="opts"></div></div>`;
+  const o=document.getElementById("opts");
+  q.opts.forEach(op=>{const b=document.createElement("button");b.className="opt";b.textContent=op.t;
+    b.onclick=()=>{[...o.children].forEach(x=>x.disabled=true);
+      if(op.correct){b.classList.add("correct");plScore+=q.w;}
+      else{b.classList.add("wrong");[...o.children].find(x=>x.textContent===q.opts.find(z=>z.correct).t)?.classList.add("correct");}
+      setTimeout(()=>{plIdx++;plIdx<plQ.length?renderPlacement():finishPlacement();},700);
+    };o.appendChild(b);});
+}
+function finishPlacement(){
+  const max=PLACEMENT.reduce((s,q)=>s+q.w,0),pct=plScore/max;
+  let lvl="A1";if(pct>=.85)lvl="B2";else if(pct>=.6)lvl="B1";else if(pct>=.35)lvl="A2";
+  S.level=lvl;addXP(40);saveState();checkAchievements();
+  view.innerHTML=`<div class="result"><div class="big">🧭</div><h2>Seviyen belirlendi</h2>
+    <div class="lvl">${lvl}</div><p class="muted">${LEVEL_NAME[lvl]} seviyesi · +40 XP<br>${iremCheer(80)}</p><div class="sp"></div>
+    <button class="btn btn-primary" onclick="goTab('lessons')">Dersleri gör →</button>
+    <button class="btn btn-ghost" onclick="goTab('home')">Ana sayfa</button></div>`;
+}
+
+/* ---------- LESSONS ---------- */
+function nextLesson(){
+  if(!S.level)return null;
+  const s=LEVEL_ORDER.indexOf(S.level);
+  for(let li=s;li<LEVEL_ORDER.length;li++)for(const les of LESSONS[LEVEL_ORDER[li]])if(!S.lessonsDone.includes(les.id))return les;
+  return null;
+}
+function renderLessons(){
+  if(!S.level){view.innerHTML=`<h1>Dersler</h1><p class="muted">Önce kısa seviye testini yapalım.</p><div class="sp"></div>
+    <button class="btn btn-primary" onclick="startPlacement()">🧭 Seviye testi</button>`;return;}
+  let html=`<h1>Dersler</h1><p class="muted">Seviyen: <b>${S.level} · ${LEVEL_NAME[S.level]}</b>. Her derste önce anlatım, sonra 8-10 alıştırma var.</p><div class="sp"></div>`;
+  LEVEL_ORDER.forEach(lv=>{
+    html+=`<h2 style="margin-top:14px">${lv} · ${LEVEL_NAME[lv]}</h2>`;
+    LESSONS[lv].forEach(les=>{
+      const done=S.lessonsDone.includes(les.id);
+      html+=`<button class="tile tile-row" onclick="openLesson('${lv}','${les.id}')"><span class="em">${done?"✅":"📖"}</span>
+        <div class="grow"><div class="t">${les.title}</div><div class="s">${les.teach.length} anlatım · ${les.ex.length} alıştırma</div></div>
+        <span class="badge-pill ${done?"":"todo"}">${done?"Bitti":"+20 XP"}</span></button>`;
+    });
+  });
+  html+=`<div class="sp"></div><button class="btn btn-ghost btn-sm" onclick="startSentence()">🧩 Cümle kurma alıştırması</button>`;
+  view.innerHTML=html;
+}
+let curLesson=null,teachIdx=0,exIdx=0,exScore=0;
+function openLesson(lv,id){curLesson=LESSONS[lv].find(l=>l.id===id);teachIdx=0;exIdx=0;exScore=0;renderTeach();}
+function renderTeach(){view.classList.remove("vcenter");
+  const t=curLesson.teach[teachIdx];let ex="";
+  if(t.exs)t.exs.forEach(e=>ex+=`<div class="ex"><div class="en">${e.en}</div><div class="tr">${e.tr}</div></div>`);
+  view.innerHTML=`<button class="back" onclick="goTab('lessons')">← Derslere dön</button>
+    <div class="qlabel">${curLesson.title.toUpperCase()} · ANLATIM ${teachIdx+1}/${curLesson.teach.length}</div>
+    <div class="progress"><div class="progress-bar" style="width:${teachIdx/curLesson.teach.length*40}%"></div></div>
+    <div class="teach"><h3>${t.h}</h3><p>${t.p}</p>${t.rule?`<div class="rule">📌 ${t.rule}</div>`:""}${ex}${t.tip?`<div class="tip">💡 ${t.tip}</div>`:""}</div>
+    <button class="btn btn-primary" onclick="teachNext()">${teachIdx<curLesson.teach.length-1?"Devam →":"Alıştırmalara geç →"}</button>`;
+}
+function teachNext(){if(teachIdx<curLesson.teach.length-1){teachIdx++;renderTeach();}else{exIdx=0;exScore=0;renderEx();}}
+function renderEx(){view.classList.remove("vcenter");
+  const q=curLesson.ex[exIdx],opts=shuffle(q.opts.map((t,i)=>({t,correct:i===q.a})));
+  view.innerHTML=`<button class="back" onclick="goTab('lessons')">← Çık</button>
+    <div class="qlabel">ALIŞTIRMA · ${exIdx+1}/${curLesson.ex.length}</div>
+    <div class="progress"><div class="progress-bar" style="width:${40+exIdx/curLesson.ex.length*60}%"></div></div>
+    <div class="qcard"><div class="qword small">${q.q.replace("___",'<span class="blank"> ? </span>')}</div>
+    <div class="opts" id="opts"></div><div class="explain" id="explain"></div></div><div id="exNext"></div>`;
+  const o=document.getElementById("opts"),ex=document.getElementById("explain");
+  opts.forEach(op=>{const b=document.createElement("button");b.className="opt";b.textContent=op.t;
+    b.onclick=()=>{[...o.children].forEach(x=>x.disabled=true);
+      if(op.correct){b.classList.add("correct");exScore++;}else{b.classList.add("wrong");[...o.children].find(x=>x.textContent===q.opts[q.a])?.classList.add("correct");}
+      ex.innerHTML="💡 "+q.ex;ex.classList.add("show");
+      const w=document.getElementById("exNext"),nb=document.createElement("button");
+      nb.className="btn btn-primary";nb.textContent=exIdx<curLesson.ex.length-1?"Devam →":"Dersi bitir →";
+      nb.onclick=()=>{exIdx<curLesson.ex.length-1?(exIdx++,renderEx()):finishLesson();};w.appendChild(nb);
+    };o.appendChild(b);});
+}
+function finishLesson(){
+  const first=!S.lessonsDone.includes(curLesson.id);
+  if(first){S.lessonsDone.push(curLesson.id);addXP(20);}
+  S.correctTotal+=exScore;saveState();checkAchievements();
+  const total=curLesson.ex.length,pct=Math.round(exScore/total*100);
+  view.innerHTML=`<div class="result"><div class="big">${pct>=80?"🌟":pct>=50?"👍":"💪"}</div>
+    <h2>${exScore} / ${total} doğru</h2><p class="muted">${first?"+20 XP kazandın!":"Tekrar da iyidir 👏"}<br>${iremCheer(pct)}</p><div class="sp"></div>
+    ${nextLesson()?`<button class="btn btn-primary" onclick="openNextLesson()">Sıradaki ders →</button>`:""}
+    <button class="btn btn-ghost" onclick="goTab('lessons')">Derslere dön</button></div>`;
+}
+function openNextLesson(){const n=nextLesson();if(n)openLesson(n.id.split("-")[0],n.id);else goTab('lessons');}
+
+/* ---------- WORDS (Oxford 3000) ---------- */
+let wordCat="noun",wordLvl="A1";
+function renderWordsMenu(){
+  let html=`<h1>Kelimeler 📖</h1><p class="muted">Oxford 3000 — en önemli 3000 İngilizce kelime. Türüne göre çalış: bir gün fiiller, bir gün sıfatlar...</p><div class="sp"></div>
+    <div class="catgrid">`;
+  Object.keys(POS_INFO).forEach(pos=>{
+    if(!OXFORD[pos])return;
+    const count=["A1","A2","B1","B2"].reduce((n,l)=>n+((OXFORD[pos][l]||[]).length),0);
+    html+=`<button class="catbtn" onclick="openCat('${pos}')"><div class="ci">${POS_INFO[pos].ic}</div>
+      <div class="cn">${POS_INFO[pos].tr}</div><div class="cc">${count} kelime</div></button>`;
+  });
+  html+=`</div>`;
+  view.innerHTML=html;
+}
+function openCat(pos){wordCat=pos;wordLvl=S.level||"A1";renderCat();}
+function renderCat(){view.classList.remove("vcenter");
+  const words=(OXFORD[wordCat][wordLvl]||[]);
+  let html=`<button class="back" onclick="goTab('words')">← Türler</button>
+    <h2>${POS_INFO[wordCat].ic} ${POS_INFO[wordCat].tr}</h2>
+    <div class="lvlrow">`;
+  ["A1","A2","B1","B2"].forEach(l=>html+=`<button class="lvlchip ${l===wordLvl?"on":""}" onclick="setWordLvl('${l}')">${l}</button>`);
+  html+=`</div>
+    <button class="btn btn-leaf btn-sm" onclick="studyCat()">🎧 Bu listeyi çalış (sesli)</button>
+    <p class="muted">${words.length} kelime · dokun → dinle</p><div class="sp"></div>
+    <div class="wordlist">`;
+  words.forEach(w=>{
+    const tr=(typeof TR!=="undefined"&&TR[w])?TR[w]:"";
+    html+=`<div class="wrow"><div class="wtext"><div class="ww">${w}</div>${tr?`<div class="wtr">${tr}</div>`:""}</div>
+      <button class="wsay" onclick="speak('${w.replace(/'/g,"\\'")}')">🔊</button></div>`;
+  });
+  html+=`</div>`;
+  view.innerHTML=html;
+}
+function setWordLvl(l){wordLvl=l;renderCat();}
+/* study flow: show word, hear it, tap to reveal a simple English sense via example use through TTS + self-check */
+let studyList=[],studyIdx=0;
+function studyCat(){
+  studyList=shuffle(OXFORD[wordCat][wordLvl]||[]).slice(0,15);
+  studyIdx=0;renderStudy();
+}
+function renderStudy(){view.classList.remove("vcenter");
+  if(!studyList.length){goTab('words');return;}
+  const w=studyList[studyIdx];
+  const tr=(typeof TR!=="undefined"&&TR[w])?TR[w]:"";
+  view.innerHTML=`<button class="back" onclick="renderCat()">← Liste</button>
+    <div class="qlabel">${POS_INFO[wordCat].tr.toUpperCase()} · ${studyIdx+1}/${studyList.length}</div>
+    <div class="progress"><div class="progress-bar" style="width:${studyIdx/studyList.length*100}%"></div></div>
+    <div class="qcard center">
+      <div class="qpic">${POS_INFO[wordCat].ic}</div>
+      <div class="qword">${w}</div>
+      <button class="say big" onclick="speak('${w.replace(/'/g,"\\'")}')">🔊 Dinle</button>
+      <div id="meaningWrap" style="margin-top:16px">
+        <button class="btn btn-ghost btn-sm" id="revealMeaning" onclick="showMeaning()">Anlamı göster (Türkçe)</button>
+        <div id="meaning" style="display:none">
+          <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98928a;font-weight:600;margin-bottom:4px">Türkçe</div>
+          <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:22px;font-weight:700;color:var(--sun)">${tr||"—"}</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="studyNext()">${studyIdx<studyList.length-1?"Sonraki kelime →":"Bitir →"}</button>`;
+  setTimeout(()=>speak(w),300);
+}
+function showMeaning(){
+  document.getElementById("revealMeaning").style.display="none";
+  document.getElementById("meaning").style.display="block";
+}
+function studyNext(){
+  S.wordsStudied+=1;
+  if(studyIdx<studyList.length-1){studyIdx++;renderStudy();}
+  else{addXP(10);saveState();checkAchievements();
+    view.innerHTML=`<div class="result"><div class="big">📖</div><h2>${studyList.length} kelime çalıştın</h2>
+      <p class="muted">+10 XP<br>${iremCheer(100)}</p><div class="sp"></div>
+      <button class="btn btn-leaf" onclick="studyCat()">Yeni liste</button>
+      <button class="btn btn-ghost" onclick="renderCat()">Listeye dön</button></div>`;}
+}
+
+/* ---------- SENTENCE BUILDING ---------- */
+let senQueue=[],senIdx=0,senCorrect=0,senBuild=[],senTarget=[];
+function startSentence(){
+  const lv=S.level||"A1";
+  senQueue=shuffle(SENTENCES[lv]).slice(0,8);senIdx=0;senCorrect=0;renderSentence();
+}
+function renderSentence(){view.classList.remove("vcenter");
+  const item=senQueue[senIdx];
+  senTarget=item.s.split(" ");
+  senBuild=[];
+  const bank=shuffle(senTarget.map((w,i)=>({w,i})));
+  view.innerHTML=`<button class="back" onclick="goTab('home')">← Çık</button>
+    <div class="qlabel">CÜMLE KUR · ${senIdx+1}/${senQueue.length} · ✅ ${senCorrect}</div>
+    <div class="progress"><div class="progress-bar" style="width:${senIdx/senQueue.length*100}%"></div></div>
+    <div class="qcard">
+      <div class="qlabel">Türkçesi</div>
+      <div class="qword small" style="margin-top:6px">${item.tr}</div>
+      <div class="build-area" id="build"></div>
+      <div class="bank" id="bank"></div>
+      <div class="feedbar" id="feed"></div>
+    </div>
+    <div id="senNext"></div>`;
+  const bankEl=document.getElementById("bank");
+  bank.forEach(tok=>{
+    const c=document.createElement("button");c.className="chip";c.textContent=tok.w;c.dataset.k=tok.i;
+    c.onclick=()=>addChip(tok,c);bankEl.appendChild(c);
+  });
+}
+function addChip(tok,el){
+  if(el.classList.contains("used"))return;
+  el.classList.add("used");
+  senBuild.push({tok,el});
+  redrawBuild();
+  if(senBuild.length===senTarget.length)checkSentence();
+}
+function redrawBuild(){
+  const b=document.getElementById("build");b.innerHTML="";
+  senBuild.forEach((it,idx)=>{
+    const c=document.createElement("button");c.className="chip inbuild";c.textContent=it.tok.w;
+    c.onclick=()=>{it.el.classList.remove("used");senBuild.splice(idx,1);redrawBuild();document.getElementById("feed").textContent="";};
+    b.appendChild(c);
+  });
+}
+function checkSentence(){
+  const made=senBuild.map(x=>x.tok.w).join(" ");
+  const target=senTarget.join(" ");
+  const feed=document.getElementById("feed");
+  const ok=made.toLowerCase()===target.toLowerCase();
+  if(ok){senCorrect++;feed.textContent="✅ Doğru!";feed.className="feedbar ok";speak(target);}
+  else{feed.textContent="❌ Sıra yanlış. Doğrusu: "+target;feed.className="feedbar no";}
+  document.querySelectorAll("#bank .chip").forEach(c=>c.style.pointerEvents="none");
+  document.querySelectorAll("#build .chip").forEach(c=>c.style.pointerEvents="none");
+  const w=document.getElementById("senNext");w.innerHTML="";
+  const nb=document.createElement("button");nb.className="btn btn-primary";
+  nb.textContent=senIdx<senQueue.length-1?"Devam →":"Sonucu gör →";
+  nb.onclick=()=>{senIdx<senQueue.length-1?(senIdx++,renderSentence()):finishSentence();};
+  w.appendChild(nb);
+}
+function finishSentence(){
+  S.sentencesDone+=senQueue.length;S.correctTotal+=senCorrect;addXP(senCorrect*3);
+  saveState();checkAchievements();
+  const pct=Math.round(senCorrect/senQueue.length*100);
+  view.innerHTML=`<div class="result"><div class="big">${pct>=80?"🧩":pct>=50?"👍":"💪"}</div>
+    <h2>${senCorrect} / ${senQueue.length} doğru</h2><p class="muted">+${senCorrect*3} XP<br>${iremCheer(pct)}</p><div class="sp"></div>
+    <button class="btn btn-sun" onclick="startSentence()">Tekrar</button>
+    <button class="btn btn-ghost" onclick="goTab('home')">Ana sayfa</button></div>`;
+}
+
+/* ---------- GAME (auto-advance) ---------- */
+function renderGameMenu(){
+  view.innerHTML=`<h1>Kelime Oyunu</h1><p class="muted">Resimlerle 100+ günlük kelime. Cevaba dokun, otomatik geçer.</p><div class="sp"></div>
+    <button class="tile" onclick="startGame('en2tr')"><span class="em">🇬🇧 → 🇹🇷</span>
+      <span class="t">İngilizce → Türkçe</span><span class="s">İngilizce kelimeyi gör, Türkçesini tahmin et. 🔊</span></button>
+    <button class="tile" onclick="startGame('tr2en')"><span class="em">🇹🇷 → 🇬🇧</span>
+      <span class="t">Türkçe → İngilizce</span><span class="s">Türkçe kelimeyi gör, İngilizcesini tahmin et.</span></button>`;
+}
+let gMode="en2tr",gQueue=[],gIdx=0,gCorrect=0,gAnswered=false;const GAME_Q=12;
+function startGame(m){gMode=m;gQueue=shuffle(VOCAB).slice(0,GAME_Q);gIdx=0;gCorrect=0;renderGame();}
+function renderGame(){view.classList.remove("vcenter");
+  gAnswered=false;const q=gQueue[gIdx],askEn=gMode==="en2tr",correct=askEn?q.tr:q.en;
+  const pool=shuffle(VOCAB.filter(w=>w!==q)),distr=[];
+  for(const w of pool){const v=askEn?w.tr:w.en;if(v!==correct&&!distr.includes(v))distr.push(v);if(distr.length===3)break;}
+  const opts=shuffle([correct,...distr]);
+  view.innerHTML=`<button class="back" onclick="goTab('game')">← Çık</button>
+    <div class="qlabel">${askEn?"İNGİLİZCE":"TÜRKÇE"} · ${gIdx+1}/${gQueue.length} · ✅ ${gCorrect}</div>
+    <div class="progress"><div class="progress-bar" style="width:${gIdx/gQueue.length*100}%"></div></div>
+    <div class="qcard"><div class="qpic">${q.img}</div><div class="qword">${askEn?q.en:q.tr}</div>
+    ${askEn?`<button class="say" onclick="speak('${q.en.replace(/'/g,"\\'")}')">🔊 Say it</button>`:""}
+    <div class="opts" id="opts"></div></div>`;
+  const o=document.getElementById("opts");
+  opts.forEach(v=>{const b=document.createElement("button");b.className="opt";b.textContent=v;
+    b.onclick=()=>{if(gAnswered)return;gAnswered=true;
+      [...o.children].forEach(x=>{x.disabled=true;if(x.textContent===correct)x.classList.add("correct");else x.classList.add("dim");});
+      if(v===correct){gCorrect++;if(askEn)speak(q.en);}else{b.classList.remove("dim");b.classList.add("wrong");}
+      setTimeout(()=>{gIdx<gQueue.length-1?(gIdx++,renderGame()):finishGame();},900);
+    };o.appendChild(b);});
+}
+function finishGame(){
+  S.gamesPlayed++;S.correctTotal+=gCorrect;addXP(gCorrect*2);
+  const perfect=gCorrect===gQueue.length;if(perfect)S.perfectRounds++;
+  saveState();checkAchievements();
+  const pct=Math.round(gCorrect/gQueue.length*100);
+  view.innerHTML=`<div class="result"><div class="big">${perfect?"🏆":pct>=60?"👍":"💪"}</div>
+    <h2>${gCorrect} / ${gQueue.length} doğru</h2><p class="muted">+${gCorrect*2} XP ${perfect?"· Kusursuz! ⭐":""}<br>${iremCheer(pct)}</p><div class="sp"></div>
+    <button class="btn btn-leaf" onclick="startGame('${gMode}')">Tekrar oyna</button>
+    <button class="btn btn-ghost" onclick="goTab('game')">Mod seç</button></div>`;
+}
+
+/* ---------- LISTENING (auto-advance) ---------- */
+let lQueue=[],lIdx=0,lCorrect=0,lAnswered=false;const LISTEN_Q=10;
+function startListen(){lQueue=shuffle(VOCAB).slice(0,LISTEN_Q);lIdx=0;lCorrect=0;renderListen();}
+function renderListen(){view.classList.remove("vcenter");
+  lAnswered=false;const q=lQueue[lIdx];
+  const pool=shuffle(VOCAB.filter(w=>w!==q)),distr=[];
+  for(const w of pool){if(!distr.includes(w.tr)&&w.tr!==q.tr)distr.push(w.tr);if(distr.length===3)break;}
+  const opts=shuffle([q.tr,...distr]);
+  view.innerHTML=`<button class="back" onclick="goTab('home')">← Çık</button>
+    <div class="qlabel">DİNLEME · ${lIdx+1}/${lQueue.length} · ✅ ${lCorrect}</div>
+    <div class="progress"><div class="progress-bar" style="width:${lIdx/lQueue.length*100}%"></div></div>
+    <div class="qcard"><div class="qlabel">Dinle ve Türkçesini seç</div><div class="qpic">🎧</div>
+      <button class="say big" onclick="speak('${q.en.replace(/'/g,"\\'")}')">🔊 Tekrar dinle</button>
+      <div class="opts" id="opts"></div></div>`;
+  setTimeout(()=>speak(q.en),350);
+  const o=document.getElementById("opts");
+  opts.forEach(v=>{const b=document.createElement("button");b.className="opt";b.textContent=v;
+    b.onclick=()=>{if(lAnswered)return;lAnswered=true;
+      [...o.children].forEach(x=>{x.disabled=true;if(x.textContent===q.tr)x.classList.add("correct");else x.classList.add("dim");});
+      if(v===q.tr)lCorrect++;else{b.classList.remove("dim");b.classList.add("wrong");}
+      setTimeout(()=>{lIdx<lQueue.length-1?(lIdx++,renderListen()):finishListen();},950);
+    };o.appendChild(b);});
+}
+function finishListen(){
+  S.listenDone+=lQueue.length;S.correctTotal+=lCorrect;addXP(lCorrect*2);saveState();checkAchievements();
+  const pct=Math.round(lCorrect/lQueue.length*100);
+  view.innerHTML=`<div class="result"><div class="big">${pct>=80?"🎧":pct>=50?"👍":"💪"}</div>
+    <h2>${lCorrect} / ${lQueue.length} doğru</h2><p class="muted">+${lCorrect*2} XP<br>${iremCheer(pct)}</p><div class="sp"></div>
+    <button class="btn btn-sun" onclick="startListen()">Tekrar</button>
+    <button class="btn btn-ghost" onclick="goTab('home')">Ana sayfa</button></div>`;
+}
+
+/* ---------- SPELLING ---------- */
+let sQueue=[],sIdx=0,sCorrect=0,sAnswered=false,hintLevel=0;const SPELL_Q=10;
+function startSpell(){sQueue=shuffle(SPELL_WORDS).slice(0,SPELL_Q);sIdx=0;sCorrect=0;renderSpell();}
+function renderSpell(){view.classList.remove("vcenter");
+  sAnswered=false;hintLevel=0;const q=sQueue[sIdx];
+  view.innerHTML=`<button class="back" onclick="goTab('home')">← Çık</button>
+    <div class="qlabel">YAZMA · ${sIdx+1}/${sQueue.length} · ✅ ${sCorrect}</div>
+    <div class="progress"><div class="progress-bar" style="width:${sIdx/sQueue.length*100}%"></div></div>
+    <div class="qcard"><div class="qpic">${q.img}</div><div class="qlabel">Türkçesi: ${q.tr}</div>
+      <button class="say" onclick="speak('${q.en.replace(/'/g,"\\'")}')">🔊 Dinle</button>
+      <input class="spell-in" id="spellIn" placeholder="İngilizce yaz..." autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false">
+      <div class="hint-letters" id="hint"></div><div class="explain" id="explain"></div></div>
+    <button class="btn btn-ghost btn-sm" id="hintBtn" style="margin-top:14px" onclick="spellHint()">💡 İpucu (bir harf aç)</button>
+    <div id="sNext"></div>`;
+  const inp=document.getElementById("spellIn");inp.focus();
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")checkSpell();});
+  const w=document.getElementById("sNext"),chk=document.createElement("button");
+  chk.className="btn btn-primary";chk.textContent="Kontrol et";chk.onclick=checkSpell;w.appendChild(chk);
+}
+function spellHint(){const q=sQueue[sIdx];hintLevel=Math.min(hintLevel+1,q.en.length);
+  const shown=q.en.slice(0,hintLevel).split("").join(" ");
+  const rest=q.en.slice(hintLevel).replace(/./g,"_ ");
+  document.getElementById("hint").textContent=(shown+" "+rest).trim();}
+function checkSpell(){
+  if(sAnswered)return;const q=sQueue[sIdx],inp=document.getElementById("spellIn");
+  const val=inp.value.trim().toLowerCase();if(!val)return;
+  sAnswered=true;inp.disabled=true;const ex=document.getElementById("explain");
+  const correct=val===q.en.toLowerCase();
+  if(correct){sCorrect++;inp.style.borderColor="var(--leaf)";ex.innerHTML="✅ Doğru! <b>"+q.en+"</b>";speak(q.en);}
+  else{inp.style.borderColor="var(--wrong)";ex.innerHTML="Doğrusu: <b>"+q.en+"</b>";}
+  ex.classList.add("show");document.getElementById("hintBtn").style.display="none";
+  const w=document.getElementById("sNext");w.innerHTML="";
+  const nb=document.createElement("button");nb.className="btn btn-primary";
+  nb.textContent=sIdx<sQueue.length-1?"Devam →":"Sonucu gör →";
+  nb.onclick=()=>{sIdx<sQueue.length-1?(sIdx++,renderSpell()):finishSpell();};w.appendChild(nb);
+}
+function finishSpell(){
+  S.spellDone+=sQueue.length;S.correctTotal+=sCorrect;addXP(sCorrect*3);saveState();checkAchievements();
+  const pct=Math.round(sCorrect/sQueue.length*100);
+  view.innerHTML=`<div class="result"><div class="big">${pct>=80?"🔤":pct>=50?"👍":"💪"}</div>
+    <h2>${sCorrect} / ${sQueue.length} doğru</h2><p class="muted">+${sCorrect*3} XP<br>${iremCheer(pct)}</p><div class="sp"></div>
+    <button class="btn btn-sun" onclick="startSpell()">Tekrar</button>
+    <button class="btn btn-ghost" onclick="goTab('home')">Ana sayfa</button></div>`;
+}
+
+/* ---------- ACHIEVEMENTS ---------- */
+function renderAch(){
+  const unlocked=S.achievements.length;
+  let html=`<h1>Başarılar</h1><p class="muted">${unlocked} / ${ACHIEVEMENTS.length} rozet · ${S.xp} XP</p><div class="sp"></div>
+    <div class="stats"><div class="stat"><div class="n">${S.lessonsDone.length}</div><div class="l">Ders</div></div>
+    <div class="stat"><div class="n">${S.gamesPlayed}</div><div class="l">Oyun</div></div>
+    <div class="stat"><div class="n">${S.correctTotal}</div><div class="l">Doğru</div></div></div>
+    <div class="ach-grid">`;
+  ACHIEVEMENTS.forEach(a=>{const g=S.achievements.includes(a.id);
+    html+=`<div class="ach ${g?"":"locked"}"><div class="ico">${g?a.ico:"🔒"}</div><div class="nm">${a.nm}</div><div class="ds">${a.ds}</div></div>`;});
+  html+=`</div>`;view.innerHTML=html;
+}
+
+/* ---------- PROGRESS / İREM ---------- */
+function progressCode(){
+  const data={v:2,full:S};
+  return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
+function renderProgress(){
+  const allDone=S.lessonsDone.length>=totalLessons();
+  const code=progressCode();
+  let html=`<button class="back" onclick="goTab('home')">← Ana sayfa</button>
+    <h1>İrem'in Köşesi 💌</h1>
+    <p class="muted">Alperen'in ilerlemesini gör, İrem'e (Claude'a) gönder.</p><div class="sp"></div>
+    <div class="stats"><div class="stat"><div class="n">${S.level||"—"}</div><div class="l">Seviye</div></div>
+    <div class="stat"><div class="n">${S.lessonsDone.length}/${totalLessons()}</div><div class="l">Ders</div></div>
+    <div class="stat"><div class="n">${S.xp}</div><div class="l">XP</div></div></div>`;
+  if(allDone){
+    html+=`<div class="love"><div class="from">🎉 Harika haber</div>
+      <div class="msg">Alperen tüm dersleri bitirdi! Aşağıdaki kodu Claude'a gönderirsen, puanını kaybetmeden yeni seviyeler eklenebilir.</div></div>`;
+  }
+  html+=`<h2 style="margin-top:8px">İlerleme kodu</h2>
+    <p class="muted">Bu kodu kopyala ve sohbete yapıştır. Claude, Alperen'in tüm puanını koruyarak uygulamayı güncelleyebilir.</p>
+    <textarea class="codebox" id="codeBox" readonly>${code}</textarea>
+    <button class="btn btn-rose" onclick="copyCode()">📋 Kodu kopyala</button>
+    <button class="btn btn-ghost" onclick="shareCode()">📤 Paylaş</button>
+    <div class="sp"></div><h2>Kod yükle (geri al)</h2>
+    <p class="muted">Yeni sürümde eski ilerlemeyi geri yüklemek için kodu buraya yapıştır.</p>
+    <textarea class="codebox" id="importBox" placeholder="İlerleme kodunu buraya yapıştır..."></textarea>
+    <button class="btn btn-primary" onclick="importCode()">⬆️ İlerlemeyi geri yükle</button>`;
+  view.innerHTML=html;
+}
+function copyCode(){const t=document.getElementById("codeBox");t.select();t.setSelectionRange(0,99999);
+  try{document.execCommand("copy");}catch(e){}if(navigator.clipboard){navigator.clipboard.writeText(t.value).catch(()=>{});}toast("📋 Kod kopyalandı");}
+function shareCode(){const code=document.getElementById("codeBox").value;const msg="Alperen's English progress:\n\n"+code;
+  if(navigator.share){navigator.share({title:"Alperen's English",text:msg}).catch(()=>{});}else copyCode();}
+function importCode(){const raw=document.getElementById("importBox").value.trim();if(!raw){toast("Önce kod yapıştır");return;}
+  try{const data=JSON.parse(decodeURIComponent(escape(atob(raw))));const restore=data.full||data;
+    S={...DEFAULT_STATE,...restore};saveState();checkAchievements();updateHeader();toast("✅ İlerleme geri yüklendi");
+    setTimeout(()=>goTab('home'),600);}catch(e){toast("⚠️ Kod okunamadı");}}
+
+/* ---------- BOOT ---------- */
+(async function(){await loadState();checkAchievements();render();})();
+
+</script>
+</body>
+</html>
